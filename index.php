@@ -1,3 +1,25 @@
+<?php
+  
+  session_start();
+
+  $error = [
+    'signin' => $_SESSION['signin_error'] ?? '',
+    'signup' => $_SESSION['signup_error'] ?? ''
+];
+$active_form = $_SESSION['active_form'] ?? 'signin';
+
+session_unset();
+
+function showError($error) {
+  return !empty($error) ? "<p class='error-message'>$error</p>" : '';
+}
+
+function isActive($formName, $active_form) {
+  return $formName === $active_form ? 'active' : '';
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,17 +33,25 @@
     <div class="container">
       <div class="forms-container">
           
-        <!--signin-->
-        <div class="signin-signup">
-          <form action="signin.php" method="POST" class="sign-in-form">
+         <!--signin-->
+         <div class="signin-signup">
+
+          <!--warning to user-->
+          <!--?= isActiveForm('signin', $active_form) ? -->
+
+          <form action="signin.php" method="POST" id="loginForm" class="sign-in-form">
             <h2 class="title">Sign in</h2>
+
+            <!--error message-->
+            <?= showError($error['signin']) ?>
+
             <div class="input-field">
                 <i class='bx bxs-user'></i>
-              <input type="text" placeholder="Username" required/>
+              <input type="text" name="username" placeholder="Username" required/>
             </div>
             <div class="input-field">
               <i class='bx bxs-lock-alt'></i>
-              <input type="password" placeholder="Password" required/>
+              <input type="password" name="password" placeholder="Password" required/>
             </div>
             <input type="submit" value="Login" class="btn solid" />
             <p class="social-text">Or Sign in with social platforms</p>
@@ -40,21 +70,26 @@
       
 
           <!--signup-->
-          <form action="signup.php" method="POST" class="sign-up-form">
+          <!--warning to user-->
+          <!--?= isActiveForm('signup', $active_form) ?-->
+          <form action="signup.php" method="POST" id="register-form" class="sign-up-form">
             <h2 class="title">Sign up</h2>
+
+            <!--error message-->
+            <?= showError($error['signup']) ?>
             <div class="input-field">
               <i class="bx bxs-user"></i>
-              <input type="text" placeholder="Username" required/>
+              <input type="text" name="username" placeholder="Username" required/>
             </div>
             <div class="input-field">
               <i class="bx bx-mail-send"></i>
-              <input type="email" placeholder="Email" required/>
+              <input type="email" name="email" placeholder="Email" required/>
             </div>
             <div class="input-field">
               <i class="bx bxs-lock-alt"></i>
-              <input type="password" placeholder="Password" required/>
+              <input type="password" name="password" placeholder="Password" required/>
             </div>
-            <input type="submit" class="btn" value="Sign up" />
+            <button type="submit" class="btn" name="signup">Sign up</button>
             <p class="social-text">Or Sign up with social platforms</p>
             <div class="social-media">
               <a href="#" class="social-icon">
@@ -69,6 +104,7 @@
             </div>
           </form>
 
+
         </div>
       </div>
 
@@ -79,9 +115,7 @@
             <p>
                 A happy pet starts with the best care! Schedule your dog's appointment today for tail wags and good health.
             </p>
-            <button class="btn transparent" id="sign-up-btn">
-              Sign up
-            </button>
+            <button class="btn transparent" id="sign-up-btn"> Sign up </button>
           </div>
           <img src="img/undraw_cat_lqdj.svg" class="image" alt="" />
         </div>
@@ -91,40 +125,12 @@
             <p>
                 Your pup deserves the best care! Book an appointment today for a healthy, happy tail-wagging companion.
             </p>
-            <button class="btn transparent" id="sign-in-btn">
-              Sign in
-            </button>
+            <button class="btn transparent" id="sign-in-btn">Sign in</button>
           </div>
           <img src="img/undraw_dog_jfxm.svg" class="image" alt="" />
         </div>
       </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <script src="script.js"></script>
   </body>

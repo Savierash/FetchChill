@@ -11,7 +11,7 @@ sign_in_btn.addEventListener("click", () => {
   container.classList.remove("sign-up-mode");
 });
 
-// Sign up form submission
+
 // Sign up form submission
 document.getElementById('registerForm').onsubmit = function(event) {
   event.preventDefault(); // Prevent form from submitting normally

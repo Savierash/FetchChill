@@ -1,50 +1,47 @@
 <?php
-include 'config.php'; // Ensure config.php contains a working DB connection
+include 'config.php'; 
+session_start();
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (isset($_POST['username'], $_POST['email'], $_POST['password'])) {
-        $username = mysqli_real_escape_string($conn, $_POST['username']);
-        $email = mysqli_real_escape_string($conn, $_POST['email']);
-        $password = $_POST['password'];
+if(isset($_POST['signup'])) {
+    $name = $_POST['username'];
+    $email = $_POST['email'];
+    $password = password_hash ($_POST['password'], PASSWORD_DEFAULT); 
 
-        // Check if the username already exists
-        $checkQuery = "SELECT * FROM users WHERE username = ?";
-        if ($stmt = mysqli_prepare($conn, $checkQuery)) {
-            mysqli_stmt_bind_param($stmt, "s", $username);
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_store_result($stmt);
-
-            if (mysqli_stmt_num_rows($stmt) > 0) {
-                echo json_encode(["status" => "error", "message" => "Username already taken"]);
-            } else {
-                // Hash the password
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-                // Insert the user data into the database
-                $insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
-                if ($insertStmt = mysqli_prepare($conn, $insertQuery)) {
-                    mysqli_stmt_bind_param($insertStmt, "sss", $username, $email, $hashedPassword);
-                    if (mysqli_stmt_execute($insertStmt)) {
-                        echo json_encode(["status" => "success", "message" => "Signup successful"]);
-                    } else {
-                        echo json_encode(["status" => "error", "message" => "Error: Unable to register"]);
-                    }
-                    mysqli_stmt_close($insertStmt);
-                } else {
-                    echo json_encode(["status" => "error", "message" => "Error: Failed to prepare insert query"]);
-                }
-            }
-            mysqli_stmt_close($stmt);
-        } else {
-            echo json_encode(["status" => "error", "message" => "Error: Failed to prepare select query"]);
-        }
+    $checkEmail =$conn->query ("SELECT email FROM users WHERE email = '$email'");
+    if($checkEmail->num_rows > 0) {
+       $_SESSION['signup_error'] = "Email already exists";
+       $_SESSION['active_form'] = 'signup';
     } else {
-        echo json_encode(["status" => "error", "message" => "Form not submitted properly"]);
+       $conn->query("INSERT INTO users (username, email, password) VALUES ('$name', '$email', '$password')");
     }
+
+    header('Location: index.php');
+    exit();
+
+}
+if (isset($_POST['signin'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    $result = $conn->query("SELECT * FROM users WHERE email = '$email'");
+    if($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if(password_verify($password, $user['password'])) {
+            $_SESSION['name'] = $user['name'];
+            $_SESSION['email'] =  $user['email'];
+            header('Location: home.php');
+            exit();
+        }
+    }
+
+    $_SESSION['signin_error'] = "Invalid email or password";
+    $_SESSION['active_form'] = 'signin';
+    header('Location: index.php');
+    exit();
 }
 
-mysqli_close($conn); // Always close the connection when done
 ?>
+
 
 
 
@@ -132,9 +129,7 @@ mysqli_close($conn); // Always close the connection when done
             <p>
                 A happy pet starts with the best care! Schedule your dog's appointment today for tail wags and good health.
             </p>
-            <button class="btn transparent" id="sign-up-btn">
-              Sign up
-            </button>
+            <button class="btn transparent" id="sign-up-btn"> Sign up </button>
           </div>
           <img src="img/undraw_cat_lqdj.svg" class="image" alt="" />
         </div>
@@ -144,9 +139,7 @@ mysqli_close($conn); // Always close the connection when done
             <p>
                 Your pup deserves the best care! Book an appointment today for a healthy, happy tail-wagging companion.
             </p>
-            <button class="btn transparent" id="sign-in-btn">
-              Sign in
-            </button>
+            <button class="btn transparent" id="sign-in-btn">Sign in</button>
           </div>
           <img src="img/undraw_dog_jfxm.svg" class="image" alt="" />
         </div>

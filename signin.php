@@ -1,8 +1,8 @@
 <?php
-include 'config.php'; // Ensure config.php contains a working DB connection
+include 'config.php'; 
 session_start();
 
-// If the user is already logged in, redirect them to home
+// If the user is already logged in, redirect to home
 if (isset($_SESSION['username'])) {
     header("Location: home.html");
     exit();
@@ -25,22 +25,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username'], $_POST['p
                 // Correct password, create session
                 $_SESSION['username'] = $user['username'];
                 
-                // Return JSON response with success message
-                echo json_encode(["status" => "success", "message" => "Login successful"]);
+                // Redirect to home or success page
+                echo "<script type='text/javascript'>alert('Login successful'); window.location.href = 'home.html';</script>";
                 exit();
             } else {
-                echo json_encode(["status" => "error", "message" => "Invalid credentials"]);
+                echo "<script type='text/javascript'>alert('Invalid credentials');</script>";
             }
         } else {
-            echo json_encode(["status" => "error", "message" => "User not found"]);
+            echo "<script type='text/javascript'>alert('User not found');</script>";
         }
         mysqli_stmt_close($stmt);
     } else {
-        echo json_encode(["status" => "error", "message" => "Error: Could not prepare statement"]);
+        echo "<script type='text/javascript'>alert('Error: Could not prepare statement');</script>";
     }
 }
 
-mysqli_close($conn); // Always close the connection when done
+mysqli_close($conn); 
 ?>
 
 
