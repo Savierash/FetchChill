@@ -1,19 +1,54 @@
 <?php
-include 'config.php';
+include 'config.php'; // Ensure config.php contains a working DB connection
 
-if (isset($_POST['signup'])) {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hashing for security
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    if (isset($_POST['username'], $_POST['email'], $_POST['password'])) {
+        $username = mysqli_real_escape_string($conn, $_POST['username']);
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $password = $_POST['password'];
 
-    $query = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')";
-    if (mysqli_query($conn, $query)) {
-        echo "Registration Successful! <a href='signin.php'>Login Here</a>";
+        // Check if the username already exists
+        $checkQuery = "SELECT * FROM users WHERE username = ?";
+        if ($stmt = mysqli_prepare($conn, $checkQuery)) {
+            mysqli_stmt_bind_param($stmt, "s", $username);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_store_result($stmt);
+
+            if (mysqli_stmt_num_rows($stmt) > 0) {
+                echo json_encode(["status" => "error", "message" => "Username already taken"]);
+            } else {
+                // Hash the password
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+                // Insert the user data into the database
+                $insertQuery = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+                if ($insertStmt = mysqli_prepare($conn, $insertQuery)) {
+                    mysqli_stmt_bind_param($insertStmt, "sss", $username, $email, $hashedPassword);
+                    if (mysqli_stmt_execute($insertStmt)) {
+                        echo json_encode(["status" => "success", "message" => "Signup successful"]);
+                    } else {
+                        echo json_encode(["status" => "error", "message" => "Error: Unable to register"]);
+                    }
+                    mysqli_stmt_close($insertStmt);
+                } else {
+                    echo json_encode(["status" => "error", "message" => "Error: Failed to prepare insert query"]);
+                }
+            }
+            mysqli_stmt_close($stmt);
+        } else {
+            echo json_encode(["status" => "error", "message" => "Error: Failed to prepare select query"]);
+        }
     } else {
-        echo "Error: " . mysqli_error($conn);
+        echo json_encode(["status" => "error", "message" => "Form not submitted properly"]);
     }
 }
+
+mysqli_close($conn); // Always close the connection when done
 ?>
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +65,7 @@ if (isset($_POST['signup'])) {
           
          <!--signin-->
          <div class="signin-signup">
-          <form action="signin.php" method="POST" class="sign-in-form">
+          <form action="signin.php" method="POST" id="loginForm" class="sign-in-form">
             <h2 class="title">Sign in</h2>
             <div class="input-field">
                 <i class='bx bxs-user'></i>
@@ -57,7 +92,7 @@ if (isset($_POST['signup'])) {
       
 
           <!--signup-->
-          <form action="signup.php" method="POST" class="sign-up-form">
+          <form action="signup.php" method="POST" id="registerForm" class="sign-up-form">
             <h2 class="title">Sign up</h2>
             <div class="input-field">
               <i class="bx bxs-user"></i>

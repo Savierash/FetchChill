@@ -1,23 +1,48 @@
 <?php
-include 'config.php';
+include 'config.php'; // Ensure config.php contains a working DB connection
 session_start();
 
-if (isset($_POST['signin'])) {
-    $username = $_POST['username'];
+// If the user is already logged in, redirect them to home
+if (isset($_SESSION['username'])) {
+    header("Location: home.html");
+    exit();
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username'], $_POST['password'])) {
+    $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM users WHERE username='$username'";
-    $result = mysqli_query($conn, $query);
-    $user = mysqli_fetch_assoc($result);
-
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['username'] = $user['username'];
-        echo "Login Successful! <a href='welcome.php'>Go to Dashboard</a>";
+    // Using prepared statements to prevent SQL injection
+    $query = "SELECT * FROM users WHERE username = ?";
+    if ($stmt = mysqli_prepare($conn, $query)) {
+        mysqli_stmt_bind_param($stmt, "s", $username);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        
+        // Check if the user exists and verify the password
+        if ($user = mysqli_fetch_assoc($result)) {
+            if (password_verify($password, $user['password'])) {
+                // Correct password, create session
+                $_SESSION['username'] = $user['username'];
+                
+                // Return JSON response with success message
+                echo json_encode(["status" => "success", "message" => "Login successful"]);
+                exit();
+            } else {
+                echo json_encode(["status" => "error", "message" => "Invalid credentials"]);
+            }
+        } else {
+            echo json_encode(["status" => "error", "message" => "User not found"]);
+        }
+        mysqli_stmt_close($stmt);
     } else {
-        echo "Invalid Credentials!";
+        echo json_encode(["status" => "error", "message" => "Error: Could not prepare statement"]);
     }
 }
+
+mysqli_close($conn); // Always close the connection when done
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -32,9 +57,9 @@ if (isset($_POST['signin'])) {
     <div class="container">
       <div class="forms-container">
           
-        <!--signin-->
-        <div class="signin-signup">
-          <form action="signin.php" method="POST" class="sign-in-form">
+         <!--signin-->
+         <div class="signin-signup">
+          <form action="signin.php" method="POST" id="loginForm" class="sign-in-form">
             <h2 class="title">Sign in</h2>
             <div class="input-field">
                 <i class='bx bxs-user'></i>
@@ -45,6 +70,13 @@ if (isset($_POST['signin'])) {
               <input type="password" name="password" placeholder="Password" required/>
             </div>
             <input type="submit" value="Login" class="btn solid" />
+            
+            <?php
+              if (isset($error)) {
+                  echo "<p style='color: red;'>$error</p>"; // Display error message
+              }
+            ?>
+
             <p class="social-text">Or Sign in with social platforms</p>
             <div class="social-media">
               <a href="#" class="social-icon">
@@ -60,35 +92,6 @@ if (isset($_POST['signin'])) {
           </form>
       
 
-          <!--signup-->
-          <form action="signup.php" method="POST" class="sign-up-form">
-            <h2 class="title">Sign up</h2>
-            <div class="input-field">
-              <i class="bx bxs-user"></i>
-              <input type="text" name="username" placeholder="Username" required/>
-            </div>
-            <div class="input-field">
-              <i class="bx bx-mail-send"></i>
-              <input type="email" name="email" placeholder="Email" required/>
-            </div>
-            <div class="input-field">
-              <i class="bx bxs-lock-alt"></i>
-              <input type="password" name="password" placeholder="Password" required/>
-            </div>
-            <input type="submit" class="btn" value="Sign up" />
-            <p class="social-text">Or Sign up with social platforms</p>
-            <div class="social-media">
-              <a href="#" class="social-icon">
-                <i class="bx bxl-facebook"></i>
-              </a>
-              <a href="#" class="social-icon">
-                <i class="bx bxl-twitter"></i>
-              </a>
-              <a href="#" class="social-icon">
-               <i class="bx bxl-google"></i>    
-              </a>
-            </div>
-          </form>
 
         </div>
       </div>

@@ -1,22 +1,14 @@
 <?php
-include 'config.php';
+$server = "localhost";
+$user = "root"; // default user for XAMPP
+$pass = ""; // default password for XAMPP is empty
+$db = "fetch_chill_db"; // your database name
 
-if (isset($_POST['signup'])) {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+// Create a connection
+$conn = mysqli_connect($server, $user, $pass, $db);
 
-    // Hash the password
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-    $query = "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$hashedPassword')";
-    if (mysqli_query($conn, $query)) {
-        echo "Sign up successful! <a href='signin.php'>Sign in here</a>";
-    } else {
-        echo "Error: " . mysqli_error($conn);
-    }
+// Check the connection
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
-
-ini_set('max_execution_time', 300);  // 300 seconds (5 minutes)
-
 ?>
