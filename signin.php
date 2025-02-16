@@ -8,6 +8,11 @@ if (isset($_SESSION['username'])) {
     exit();
 }
 
+// Function to show errors
+function showError($message) {
+    return "<p class='error-message'>$message</p>";
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username'], $_POST['password'])) {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = $_POST['password'];
@@ -26,17 +31,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username'], $_POST['p
                 $_SESSION['username'] = $user['username'];
                 
                 // Redirect to home or success page
-                echo "<script type='text/javascript'>alert('Login successful'); window.location.href = 'home.html';</script>";
+                header("Location: homepage.php");
                 exit();
             } else {
-                echo "<script type='text/javascript'>alert('Invalid credentials');</script>";
+                $error_message = showError('Invalid credentials');
             }
         } else {
-            echo "<script type='text/javascript'>alert('User not found');</script>";
+            $error_message = showError('User not found');
         }
         mysqli_stmt_close($stmt);
     } else {
-        echo "<script type='text/javascript'>alert('Error: Could not prepare statement');</script>";
+        $error_message = showError('Error: Could not prepare statement');
     }
 }
 
@@ -59,7 +64,7 @@ mysqli_close($conn);
           
          <!--signin-->
          <div class="signin-signup">
-          <form action="signin.php" method="POST" id="loginForm" class="sign-in-form">
+          <form action="signin.php" method="POST" id="login-form" class="sign-in-form">
             <h2 class="title">Sign in</h2>
             <div class="input-field">
                 <i class='bx bxs-user'></i>
@@ -70,13 +75,6 @@ mysqli_close($conn);
               <input type="password" name="password" placeholder="Password" required/>
             </div>
             <input type="submit" value="Login" class="btn solid" />
-            
-            <?php
-              if (isset($error)) {
-                  echo "<p style='color: red;'>$error</p>"; // Display error message
-              }
-            ?>
-
             <p class="social-text">Or Sign in with social platforms</p>
             <div class="social-media">
               <a href="#" class="social-icon">
@@ -90,7 +88,41 @@ mysqli_close($conn);
               </a>
             </div>
           </form>
-      
+
+           <!-- Displaying error message if it exists -->
+    <?php if (isset($error_message)) echo $error_message; ?>
+
+            <!--signup-->
+          <form action="signup.php" method="POST" id="register-form" class="sign-up-form">
+            <h2 class="title">Sign up</h2>
+            <div class="input-field">
+              <i class="bx bxs-user"></i>
+              <input type="text" name="username" placeholder="Username" required/>
+            </div>
+            <div class="input-field">
+              <i class="bx bx-mail-send"></i>
+              <input type="email" name="email" placeholder="Email" required/>
+            </div>
+            <div class="input-field">
+              <i class="bx bxs-lock-alt"></i>
+              <input type="password" name="password" placeholder="Password" required/>
+            </div>
+            <input type="submit" class="btn" value="Sign up" />
+            <p class="social-text">Or Sign up with social platforms</p>
+            <div class="social-media">
+              <a href="#" class="social-icon">
+                <i class="bx bxl-facebook"></i>
+              </a>
+              <a href="#" class="social-icon">
+                <i class="bx bxl-twitter"></i>
+              </a>
+              <a href="#" class="social-icon">
+               <i class="bx bxl-google"></i>    
+              </a>
+            </div>
+          </form>
+
+    
 
 
         </div>

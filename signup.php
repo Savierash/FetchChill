@@ -2,45 +2,72 @@
 include 'config.php'; 
 session_start();
 
-if(isset($_POST['signup'])) {
+if (isset($_POST['signup'])) {
     $name = $_POST['username'];
     $email = $_POST['email'];
-    $password = password_hash ($_POST['password'], PASSWORD_DEFAULT); 
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    $checkEmail =$conn->query ("SELECT email FROM users WHERE email = '$email'");
-    if($checkEmail->num_rows > 0) {
-       $_SESSION['signup_error'] = "Email already exists";
-       $_SESSION['active_form'] = 'signup';
+    // Check if email already exists
+    $checkEmail = $conn->prepare("SELECT email FROM users WHERE email = ?");
+    $checkEmail->bind_param("s", $email); // 's' means string
+    $checkEmail->execute();
+    $checkEmail->store_result();
+
+    if ($checkEmail->num_rows > 0) {
+        // Set session error if email exists
+        $_SESSION['signup_error'] = "Email already exists";
+        $_SESSION['active_form'] = 'signup';
+        header('Location: index.php');
+        exit();
     } else {
-       $conn->query("INSERT INTO users (username, email, password) VALUES ('$name', '$email', '$password')");
+        // Insert the new user into the database if email does not exist
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $name, $email, $password); // 'sss' means three strings
+        if ($stmt->execute()) {
+            $_SESSION['signup_success'] = "Registration successful! Please log in.";
+            header('Location: signin.php');
+            exit();
+        } else {
+            $_SESSION['signup_error'] = "Error: Could not register. Please try again.";
+            $_SESSION['active_form'] = 'signup';
+            header('Location: index.php');
+            exit();
+        }
+        $stmt->close();
     }
-
-    header('Location: index.php');
-    exit();
-
 }
+
+// Signin handling
 if (isset($_POST['signin'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $result = $conn->query("SELECT * FROM users WHERE email = '$email'");
-    if($result->num_rows > 0) {
+    // Check if user exists
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email); // 's' means string
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
-        if(password_verify($password, $user['password'])) {
-            $_SESSION['name'] = $user['name'];
-            $_SESSION['email'] =  $user['email'];
-            header('Location: home.php');
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['name'] = $user['username']; // Using username for session
+            $_SESSION['email'] = $user['email'];
+            header('Location: homepage.php');
             exit();
+        } else {
+            $_SESSION['signin_error'] = "Invalid credentials";
         }
+    } else {
+        $_SESSION['signin_error'] = "User not found";
     }
 
-    $_SESSION['signin_error'] = "Invalid email or password";
     $_SESSION['active_form'] = 'signin';
     header('Location: index.php');
     exit();
 }
-
 ?>
+
 
 
 
@@ -62,7 +89,7 @@ if (isset($_POST['signin'])) {
           
          <!--signin-->
          <div class="signin-signup">
-          <form action="signin.php" method="POST" id="loginForm" class="sign-in-form">
+          <form action="signin.php" method="POST" id="login-form" class="sign-in-form">
             <h2 class="title">Sign in</h2>
             <div class="input-field">
                 <i class='bx bxs-user'></i>
@@ -89,7 +116,7 @@ if (isset($_POST['signin'])) {
       
 
           <!--signup-->
-          <form action="signup.php" method="POST" id="registerForm" class="sign-up-form">
+          <form action="signup.php" method="POST" id="register-form" class="sign-up-form">
             <h2 class="title">Sign up</h2>
             <div class="input-field">
               <i class="bx bxs-user"></i>

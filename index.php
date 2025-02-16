@@ -1,23 +1,27 @@
 <?php
-  
-  session_start();
+session_start();
 
-  $error = [
+// Fetch error messages from session if available
+$error = [
     'signin' => $_SESSION['signin_error'] ?? '',
     'signup' => $_SESSION['signup_error'] ?? ''
 ];
+
+// Determine the active form (either signin or signup)
 $active_form = $_SESSION['active_form'] ?? 'signin';
 
+// Clear session variables after they've been used to prevent repetition
 session_unset();
 
+// Function to display the error message if available
 function showError($error) {
-  return !empty($error) ? "<p class='error-message'>$error</p>" : '';
+    return !empty($error) ? "<p class='error-message'>$error</p>" : '';
 }
 
+// Function to mark the active form for styling
 function isActive($formName, $active_form) {
-  return $formName === $active_form ? 'active' : '';
+    return $formName === $active_form ? 'active' : '';
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +75,7 @@ function isActive($formName, $active_form) {
 
             <!--error message-->
             <?= showError($error['signup']) ?>
+
             <div class="input-field">
               <i class="bx bxs-user"></i>
               <input type="text" name="username" placeholder="Username" required/>

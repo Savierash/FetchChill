@@ -401,8 +401,24 @@ form.sign-in-form {
 }
 
 .error-message {
-  color: red;
-  font-size: 0.8rem;
-  margin-top: 0.2rem;
-  margin-bottom: 0.5rem;
+  padding: 12px;
+  background: #f8d7da;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #a42834;
+  text-align: center;
+  width: 300px;
+  margin: 0 auto 20px; 
 }
+
+.success-message {
+  padding: 12px;
+  background: #d4edda;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #155724;
+  text-align: center;
+  width: 300px;
+  margin: 0 auto 20px;
+}
+
