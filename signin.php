@@ -4,7 +4,7 @@ session_start();
 
 // If the user is already logged in, redirect to home
 if (isset($_SESSION['username'])) {
-    header("Location: home.html");
+    header("Location: homepage.php");
     exit();
 }
 

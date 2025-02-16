@@ -34,12 +34,8 @@ function isActive($formName, $active_form) {
       <div class="forms-container">
           
          <!--signin-->
-         <div class="signin-signup">
-
-          <!--warning to user-->
-          <!--?= isActiveForm('signin', $active_form) ? -->
-
-          <form action="signin.php" method="POST" id="loginForm" class="sign-in-form">
+         <div class="signin-signup" id="login-form">
+          <form action="signin.php" method="POST" class="sign-in-form">
             <h2 class="title">Sign in</h2>
 
             <!--error message-->
@@ -70,8 +66,6 @@ function isActive($formName, $active_form) {
       
 
           <!--signup-->
-          <!--warning to user-->
-          <!--?= isActiveForm('signup', $active_form) ?-->
           <form action="signup.php" method="POST" id="register-form" class="sign-up-form">
             <h2 class="title">Sign up</h2>
 

@@ -1,3 +1,12 @@
+<?php
+
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -17,13 +26,16 @@
         <li><a href="#about-us">About Us</a></li>
         <li><a href="#services">Services</a></li>
         <li><a href="#">Contact</a></li>
+        <button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
     </ul>
 </nav>
+
 
 <!-- HOME SECTION -->
 <section class="home" id="home">
     <div class="home-container">
         <div class="home-content">
+            <h1>Hi, <span class="username"><?php echo $_SESSION['username']; ?>!</h1></span>
             <h1>Welcome to Fetch&Chill</h1>
             <p>Where every fetch ends with cuddle</p>
         </div>

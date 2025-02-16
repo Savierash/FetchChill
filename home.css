@@ -58,6 +58,21 @@
     background-color: #E4813A;
 }
 
+.logout-btn {
+    background-color: #04befe;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #2b6ee2;
+}
+
 
 /* Responsive Navbar */
 @media (max-width: 768px) {
@@ -94,6 +109,12 @@
 .home-content {
     max-width: 500px;
 }
+
+.username {
+    color: #04befe; 
+    font-weight: bold;
+}
+
 
 .home-content h1 {
     font-size: 70px;
