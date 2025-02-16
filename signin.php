@@ -66,6 +66,10 @@ mysqli_close($conn);
          <div class="signin-signup">
           <form action="signin.php" method="POST" id="login-form" class="sign-in-form">
             <h2 class="title">Sign in</h2>
+
+            <!-- Displaying error message if it exists -->
+            <?php if (isset($error_message)) echo $error_message; ?>
+
             <div class="input-field">
                 <i class='bx bxs-user'></i>
               <input type="text" name="username" placeholder="Username" required/>
@@ -89,8 +93,7 @@ mysqli_close($conn);
             </div>
           </form>
 
-           <!-- Displaying error message if it exists -->
-    <?php if (isset($error_message)) echo $error_message; ?>
+           
 
             <!--signup-->
           <form action="signup.php" method="POST" id="register-form" class="sign-up-form">
