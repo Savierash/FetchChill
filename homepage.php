@@ -50,16 +50,41 @@ if (!isset($_SESSION['username'])) {
 <!-- ABOUT US SECTION -->
 <section class="about-us" id="about-us">
     <div class="about-container">
-        <div class="about-image">
-            <img src="img/about-us.jpg" alt="Happy Pet with Owner">
-        </div>
         <div class="about-content">
-            <h2>About Fetch & Chill</h2>
-            <p>At Fetch & Chill, we believe every pet deserves love, care, and top-notch grooming. Our expert team ensures your furry friends feel relaxed and pampered while receiving the best care possible. Whether it's grooming, check-ups, or playtime, we make every visit a happy experience!</p>
-            <button class="about-btn">Learn More</button>
+            <h2>About us</h2>
+            <p>We know life get’s  busy, and keeping up with your pet’s <br/> 
+            care can be a challenge--that’s where Fetch&Chill comes in!<br/> 
+            Our app helps fur parent’s schedule grooming, <br/> 
+            vaccinations, trainings, and health check-ups with ease. No <br/>
+             more missed vet visits or late meals--our feeding time <br/> 
+             reminders, appointment manager, and medical records <br/> 
+             tracker keep everything in one place. Because a happy,<br/> 
+             healthy pet means more time for belly rubs, tail wags, and cuddles.
+            </p>
+        </div>
+        <div class="about-image">
+            <img src="img/pic13.jpg" alt="Happy Pet with Owner">
+        </div>
+    </div>
+
+    <!-- Bottom 3 Containers -->
+    <div class="about-bottom-containers">
+        <div class="bottom-container">
+            <img src="img/pic14.jpg" alt="Pet Care">
+            <p>Pamper your pet with love and care. Our services will have your furry friend looking and feeling their best.</p>
+        </div>
+        <div class="bottom-container">
+            <img src="img/pic11.jpg" alt="Grooming">
+            <p>The health and well-being of cats and dogs is our priority. We ensure
+            that every pet recieves the attention they deserve.</p>
+        </div>
+        <div class="bottom-container">
+            <img src="img/pic12.jpg" alt="Vet Care">
+            <p>Pets are more than just animals they’re family. They fill our homes with love, loyalty, and happiness.</p>
         </div>
     </div>
 </section>
+
 
 <!-- SERVICES SECTION -->
 <section class="service-highlight" id="services">
@@ -161,6 +186,38 @@ if (!isset($_SESSION['username'])) {
         </div>
     </div>
 </section>
+
+<!-- CONTACT SECTION -->
+<section class="contact" id="contact">
+    <div class="contact-container">
+        <h2>Contact Us</h2>
+        <p>Have any questions or concerns? Reach out to us!</p>
+
+        <div class="contact-content">
+            <!-- Contact Info -->
+            <div class="contact-info">
+                <p><i class='bx bx-map'></i> Address: 123 Pet Street, Fetch City</p>
+                <p><i class='bx bx-phone'></i> Phone: +63 912 345 6789</p>
+                <p><i class='bx bx-envelope'></i> Email: support@fetchandchill.com</p>
+            </div>
+
+            <!-- Contact Form -->
+            <form action="contact_process.php" method="POST" class="contact-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">Message:</label>
+                <textarea id="message" name="message" rows="5" required></textarea>
+
+                <button type="submit">Send Message</button>
+            </form>
+        </div>
+    </div>
+</section>
+
 
 
 <script src="home.js"></script>

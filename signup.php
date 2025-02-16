@@ -37,41 +37,7 @@ if (isset($_POST['signup'])) {
     }
 }
 
-// Signin handling
-if (isset($_POST['signin'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    // Check if user exists
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email); // 's' means string
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['name'] = $user['username']; // Using username for session
-            $_SESSION['email'] = $user['email'];
-            header('Location: homepage.php');
-            exit();
-        } else {
-            $_SESSION['signin_error'] = "Invalid credentials";
-        }
-    } else {
-        $_SESSION['signin_error'] = "User not found";
-    }
-
-    $_SESSION['active_form'] = 'signin';
-    header('Location: index.php');
-    exit();
-}
 ?>
-
-
-
-
-
 
 
 <!DOCTYPE html>
