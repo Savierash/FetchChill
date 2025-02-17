@@ -98,29 +98,39 @@ if (!isset($_SESSION['username'])) {
     </div>
 </section>
 
-<section class="services" > 
+<section class="services">
     <div class="services-container">
         <h2>Services we offer</h2>
         <div class="services-list">
-            <div class="service-item">
-                <img src="img/pic5.jpg" alt="Pet Grooming">
+            <div class="service-item" onclick="showInfo(0)">
+                <img src="img/pic5.jpg" alt="Medical Care">
                 <h3>Medical Care</h3>
             </div>
-            <div class="service-item">
-                <img src="img/pic6.jpg" alt="Pet Grooming">
+            <div class="service-item" onclick="showInfo(1)">
+                <img src="img/pic6.jpg" alt="Grooming">
                 <h3>Grooming</h3>
             </div>
-            <div class="service-item">
-                <img src="img/pic7.jpg" alt="Veterinary Services">
+            <div class="service-item" onclick="showInfo(2)">
+                <img src="img/pic7.jpg" alt="Vaccine">
                 <h3>Vaccine</h3>
             </div>
-            <div class="service-item">
-                <img src="img/pic8.jpg" alt="Playtime & Fun">
+            <div class="service-item" onclick="showInfo(3)">
+                <img src="img/pic8.jpg" alt="Training">
                 <h3>Training</h3>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Fullscreen Info Pop-up -->
+<div class="fullscreen-info">
+    <div class="info-container">
+        <h2 id="service-title">Service Title</h2>
+        <p id="service-description">Details about the service.</p>
+        <button onclick="closeFullscreenInfo()">Close</button>
+    </div>
+</div>
+
 
 <!-- PET PROFILE SECTION -->
 <section class="pet-profile">
@@ -187,36 +197,40 @@ if (!isset($_SESSION['username'])) {
     </div>
 </section>
 
+
 <!-- CONTACT SECTION -->
 <section class="contact" id="contact">
     <div class="contact-container">
-        <h2>Contact Us</h2>
-        <p>Have any questions or concerns? Reach out to us!</p>
-
-        <div class="contact-content">
-            <!-- Contact Info -->
-            <div class="contact-info">
-                <p><i class='bx bx-map'></i> Address: 123 Pet Street, Fetch City</p>
-                <p><i class='bx bx-phone'></i> Phone: +63 912 345 6789</p>
-                <p><i class='bx bx-envelope'></i> Email: support@fetchandchill.com</p>
-            </div>
-
-            <!-- Contact Form -->
-            <form action="contact_process.php" method="POST" class="contact-form">
-                <label for="name">Name:</label>
+        <!-- Left Side: Contact Form -->
+        <div class="contact-form">
+            <h2>Contact Us</h2>
+            <form action="send_message.php" method="POST">
+                <label for="name">Your Name:</label>
                 <input type="text" id="name" name="name" required>
 
-                <label for="email">Email:</label>
+                <label for="email">Your Email:</label>
                 <input type="email" id="email" name="email" required>
 
-                <label for="message">Message:</label>
-                <textarea id="message" name="message" rows="5" required></textarea>
+                <label for="message">Your Message:</label>
+                <textarea id="message" name="message" required></textarea>
 
-                <button type="submit">Send Message</button>
+                <div class="form-buttons">
+                    <button type="submit">Send Message</button>
+                </div>
             </form>
+        </div>
+        
+        <!-- Right Side: Contact Details -->
+        <div class="contact-details">
+            <h2>Get in Touch</h2>
+            <p>If you have any questions or inquiries, feel free to contact us.</p>
+            <p>Email: info@fetchandchill.com</p>
+            <p>Phone: (123) 456-7890</p>
+            <p>Address: 123 Fetch St., Chill City</p>
         </div>
     </div>
 </section>
+
 
 
 
