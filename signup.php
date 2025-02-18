@@ -1,43 +1,64 @@
 <?php
-include 'config.php'; 
 session_start();
+include 'config.php'; 
 
-if (isset($_POST['signup'])) {
-    $name = $_POST['username'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-    // Check if email already exists
-    $checkEmail = $conn->prepare("SELECT email FROM users WHERE email = ?");
-    $checkEmail->bind_param("s", $email); // 's' means string
-    $checkEmail->execute();
-    $checkEmail->store_result();
-
-    if ($checkEmail->num_rows > 0) {
-        // Set session error if email exists
-        $_SESSION['signup_error'] = "Email already exists";
-        $_SESSION['active_form'] = 'signup';
-        header('Location: index.php');
-        exit();
-    } else {
-        // Insert the new user into the database if email does not exist
-        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $name, $email, $password); // 'sss' means three strings
-        if ($stmt->execute()) {
-            $_SESSION['signup_success'] = "Registration successful! Please log in.";
-            header('Location: signin.php');
-            exit();
-        } else {
-            $_SESSION['signup_error'] = "Error: Could not register. Please try again.";
-            $_SESSION['active_form'] = 'signup';
-            header('Location: index.php');
-            exit();
-        }
-        $stmt->close();
-    }
+// If the user is already logged in, redirect to homepage
+if (isset($_SESSION['username'])) {
+    header("Location: homepage.php");
+    exit();
 }
 
+// Function to show errors
+function showError($message) {
+    return "<p class='error-message'>$message</p>";
+}
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username'], $_POST['email'], $_POST['password'])) {
+    $name = mysqli_real_escape_string($conn, $_POST['username']);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = $_POST['password'];
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    // 🔎 Check if username already exists
+    $checkUsername = $conn->prepare("SELECT username FROM users WHERE username = ?");
+    $checkUsername->bind_param("s", $name);
+    $checkUsername->execute();
+    $checkUsername->store_result();
+
+    if ($checkUsername->num_rows > 0) {
+        $error_message = showError("Username already exists! Please choose another one.");
+    } else {
+        // 🔎 Check if email already exists
+        $checkEmail = $conn->prepare("SELECT email FROM users WHERE email = ?");
+        $checkEmail->bind_param("s", $email);
+        $checkEmail->execute();
+        $checkEmail->store_result();
+
+        if ($checkEmail->num_rows > 0) {
+            $error_message = showError("Email already registered! Please use another one.");
+        } else {
+            // 📝 Insert new user into the database if no duplicates
+            $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+            $stmt->bind_param("sss", $name, $email, $hashedPassword);
+
+            if ($stmt->execute()) {
+                $_SESSION['signup_success'] = "Registration successful! Please log in.";
+                header("Location: signin.php");
+                exit();
+            } else {
+                $error_message = showError("Error: Could not register. Please try again.");
+            }
+            $stmt->close();
+        }
+        $checkEmail->close();
+    }
+    $checkUsername->close();
+}
+
+mysqli_close($conn); 
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -81,6 +102,9 @@ if (isset($_POST['signup'])) {
           <!--signup-->
           <form action="signup.php" method="POST" id="register-form" class="sign-up-form">
             <h2 class="title">Sign up</h2>
+
+            <?php if (isset($error_message)) echo $error_message; ?>
+            
             <div class="input-field">
               <i class="bx bxs-user"></i>
               <input type="text" name="username" placeholder="Username" required/>

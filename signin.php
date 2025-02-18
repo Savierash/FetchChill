@@ -1,6 +1,6 @@
 <?php
-include 'config.php'; 
 session_start();
+include 'config.php'; 
 
 // If the user is already logged in, redirect to home
 if (isset($_SESSION['username'])) {
@@ -59,6 +59,7 @@ mysqli_close($conn);
     <title>Fetch & Chill</title>
   </head>
   <body>
+
     <div class="container">
       <div class="forms-container">
           
