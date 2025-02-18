@@ -85,9 +85,6 @@ mysqli_close($conn);
                 <i class="bx bxl-facebook"></i>
               </a>
               <a href="#" class="social-icon">
-               <i class="bx bxl-twitter"></i>
-              </a>
-              <a href="#" class="social-icon">
                 <i class="bx bxl-google"></i>
               </a>
             </div>
@@ -115,9 +112,6 @@ mysqli_close($conn);
             <div class="social-media">
               <a href="#" class="social-icon">
                 <i class="bx bxl-facebook"></i>
-              </a>
-              <a href="#" class="social-icon">
-                <i class="bx bxl-twitter"></i>
               </a>
               <a href="#" class="social-icon">
                <i class="bx bxl-google"></i>    
