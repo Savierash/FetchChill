@@ -1,0 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Mochiy+Pop+One&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: #f1f1f1;
+}
+
+/*DASHBOARD CODE*/
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background: #2c3e50;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img {
+  width: 100px;  
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%; 
+}
+
+.logo-name {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  font-family: "lexend deca";
+}
+
+.menu {
+  list-style: none;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.menu li {
+  width: 100%;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menu li:hover {
+  background: #52667a;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  background: #ecf0f1;
+}
+
+/*INSIDE DASHBOARD*/
+.content {
+  flex: 1;
+  padding: 20px;
+  background: #7AC8BB;
+}
+
+.content h1 {
+  margin-bottom: 20px;
+}
+
+.box-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.content-box {
+  background: white;
+  width: 280px;
+  height: 120px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  font-size: 14px;
+  font-weight: bold;
+}
+
