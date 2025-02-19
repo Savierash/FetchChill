@@ -40,12 +40,15 @@ if (!isset($_SESSION['username'])) {
             <h1>Hi, <span class="username"><?php echo $_SESSION['username']; ?>!</h1></span>
             <h1>Welcome to Fetch&Chill</h1>
             <p>Where every fetch ends with cuddle</p>
+            <!-- Go to Dashboard Button -->
+            <a href="dashboard.php" class="btn_dashboard">Go to Dashboard</a>
         </div>
         <div class="home-image">
             <img src="img/pic4.jpg" alt="Happy Dog & Cat">
         </div>
     </div>
 </section>
+
 
 <!-- ABOUT US SECTION -->
 <section class="about-us" id="about-us">

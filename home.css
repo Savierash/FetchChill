@@ -152,6 +152,25 @@
     border-radius: 15px;
 }
 
+/* Button got to dashboard*/
+.btn_dashboard {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #5995FD !important; 
+    color: white !important;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn_dashboard:hover {
+    background-color: #E4813A !important;
+}
+
+
 @media (max-width: 768px) {
     .home-container {
         flex-direction: column;
@@ -674,7 +693,7 @@ button[type="submit"]:hover {
 
 .contact-form button {
     padding: 0.7rem 1.5rem;
-    background-color: #4CAF50;
+    background-color: #5995FD;
     color: white;
     border: none;
     border-radius: 5px;
@@ -682,7 +701,7 @@ button[type="submit"]:hover {
 }
 
 .contact-form button:hover {
-    background-color: #45a049;
+    background-color: #E4813A;
 }
 
 .contact-details {

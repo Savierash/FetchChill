@@ -2,118 +2,182 @@
 @import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&family=Mochiy+Pop+One&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap');
 
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-
-body {
-  font-family: 'Poppins', sans-serif;
-  background: #f1f1f1;
 }
 
-/*DASHBOARD CODE*/
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f1f1f1;
+}
+
+/* DASHBOARD CODE */
 .container {
-  display: flex;
-  height: 100vh;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
 }
 
 .sidebar {
     width: 250px;
-    background: #2c3e50;
+    background: #081F5C;
     color: white;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     height: 100vh;
-}
-
-.sidebar {
-  width: 250px;
-  background: #2c3e50;
-  color: white;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: 0.3s;
 }
 
 .logo {
-  width: 100px;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .logo img {
-  width: 100px;  
-  height: 100px;
-  object-fit: cover;
-  border-radius: 50%; 
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
 }
 
 .logo-name {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  text-align: center;
-  font-family: "lexend deca";
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    font-family: "lexend deca";
 }
 
 .menu {
-  list-style: none;
-  width: 100%;
-  margin-top: 20px;
+    list-style: none;
+    width: 100%;
+    margin-top: 20px;
 }
 
 .menu li {
-  width: 100%;
-  padding: 15px;
-  text-align: center;
-  cursor: pointer;
-  transition: 0.3s;
+    width: 100%;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .menu li:hover {
-  background: #52667a;
+    background: #52667a;
 }
 
-.content {
-  flex: 1;
-  padding: 20px;
-  background: #ecf0f1;
+.logout-btn {
+    background-color: #5995FD;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+    margin-left: 55px;
+    margin-top: 50px;
 }
 
-/*INSIDE DASHBOARD*/
+.logout-btn:hover {
+    background-color: #E4813A;
+    transform: scale(1.05);
+}
+
+.logout-btn:active {
+    background-color: #D07F2A;
+    transform: scale(1);
+}
+
+/* INSIDE DASHBOARD */
 .content {
-  flex: 1;
-  padding: 20px;
-  background: #7AC8BB;
+    flex: 1;
+    padding: 20px;
+    background: #ffffff;
+    margin-left: 250px;
+    transition: margin-left 0.3s;
 }
 
 .content h1 {
-  margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .box-container {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .content-box {
-  background: white;
-  width: 280px;
-  height: 120px;
-  padding: 10px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-  display: flex;
-  font-size: 14px;
-  font-weight: bold;
+    background: white;
+    width: 280px;
+    height: 120px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    font-size: 14px;
+    font-weight: bold;
+    border: solid 1px #000000;
 }
 
+/* RESPONSIVE STYLES */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 10px;
+    }
+
+    .box-container {
+        flex-direction: column;
+    }
+
+    .content-box {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .logo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .logo-name {
+        font-size: 14px;
+    }
+
+    .menu li {
+        font-size: 12px;
+        padding: 10px;
+    }
+
+    .logout-btn {
+        font-size: 0.9rem;
+        padding: 8px 15px;
+        margin-left: 100px;
+        margin-top: 30px;
+    }
+}
