@@ -22,8 +22,8 @@ body {
 
 .sidebar {
     width: 250px;
-    background: #081F5C;
-    color: white;
+    background: #7096D1;
+    color: black;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -56,6 +56,7 @@ body {
     font-weight: bold;
     text-align: center;
     font-family: "lexend deca";
+    color: white;
 }
 
 .menu {
@@ -73,12 +74,13 @@ body {
 }
 
 .menu li:hover {
-    background: #52667a;
+    background: #486d92;
 }
 
+
 .logout-btn {
-    background-color: #5995FD;
-    color: white;
+    background-color: #7096D1;
+    color: black;
     border: none;
     padding: 10px 20px;
     border-radius: 25px;
