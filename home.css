@@ -71,6 +71,12 @@
 
 .logout-btn:hover {
     background-color: #E4813A;
+    transform: scale(1.05);
+}
+
+.logout-btn:active {
+    background-color: #E4813A;
+    transform: scale(0.95);
 }
 
 
@@ -168,7 +174,12 @@
 
 .btn_dashboard:hover {
     background-color: #E4813A !important;
+    transform: scale(1.05);
 }
+
+.btn_dashboard:active {
+    background-color: #D07F2A !important;
+    transform: scale(0.95);
 
 
 @media (max-width: 768px) {

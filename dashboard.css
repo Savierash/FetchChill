@@ -10,7 +10,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #f1f1f1;
+    background: #E7F1FF;
 }
 
 /* DASHBOARD CODE */
@@ -71,15 +71,16 @@ body {
     text-align: center;
     cursor: pointer;
     transition: 0.3s;
+    border-radius: 20px;
 }
 
 .menu li:hover {
-    background: #486d92;
+    background: #D9D9D9;
 }
 
 
 .logout-btn {
-    background-color: #7096D1;
+    background-color: #FFFFFF;
     color: black;
     border: none;
     padding: 10px 20px;
@@ -105,27 +106,89 @@ body {
 /* INSIDE DASHBOARD */
 .content {
     flex: 1;
-    padding: 20px;
     background: #ffffff;
     margin-left: 250px;
     transition: margin-left 0.3s;
 }
 
+/* Notification bell */
+.notification-bell {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 30px;
+    cursor: pointer;
+}
+.notification-bell i {
+    color: #333;
+}
+.notification-bell .badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    border-radius: 50%;
+    padding: 3px 7px;
+}
+
+.notification-bell:hover {
+    color:#000000;
+    transform: scale(1.05)
+}
+
+.notification-bell:active {
+    color: #000000;
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    width: 250px;
+    background: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 1000;
+}
+.notification-dropdown.active {
+    display: block;
+}
+.notification-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+.notification-item:last-child {
+    border-bottom: none;
+}
+.notification-item:hover {
+    background: #f4f4f4;
+}
+
+
+
+/* Dashboard Content */
 .content h1 {
     margin-bottom: 20px;
+    font-family: "lexend deca";
 }
 
 .box-container {
-    display: flex;
-    gap: 20px;
+    display: grid;
+    gap: 50px;
     justify-content: center;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(2, 0.1fr);
 }
 
 .content-box {
     background: white;
-    width: 280px;
-    height: 120px;
+    width: 550px;
+    height: 180px;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -152,9 +215,19 @@ body {
         padding: 10px;
     }
 
+@media (max-width: 1024px) {
     .box-container {
-        flex-direction: column;
+        grid-template-columns: repeat(2, minmax(200px, 1fr)); 
+        gap: 30px;
     }
+}
+    
+@media (max-width: 768px) {
+    .box-container {
+        grid-template-columns: repeat(1, minmax(200px, 1fr)); 
+        gap: 20px;
+    }
+}
 
     .content-box {
         width: 100%;
@@ -182,4 +255,226 @@ body {
         margin-left: 100px;
         margin-top: 30px;
     }
+}
+
+
+/*APPOINTMENT*/
+.appointment-container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
+
+.appointment-container {
+    display: none; 
+}
+
+.content h1 {
+    margin-bottom: 20px;
+    font-family: "lexend deca";
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #7096D1;
+}
+.status {
+    font-weight: bold;
+}
+.buttons button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+.confirm { background-color: green; color: white; }
+.pending { background-color: orange; color: white; }
+.cancel { background-color: red; color: white; }
+
+
+/*MEDICAL RECORDS*/
+.medical-container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.med-container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.table-med {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.thead {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    background-color: #7096D1;
+    color: white;
+}
+
+.med-form {
+    margin-top: 20px;
+}
+
+.med-input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.med-input:focus {
+    outline: none;
+    border-color: #7096D1;
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.btn-medical {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px 20px;
+    background-color: #7096D1;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-medical:hover {
+    background-color: #5f82b0;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-medical:active {
+    background-color: #4a6e94;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-medical:focus {
+    outline: none;
+    border: 2px solid #5f82b0;
+}
+
+
+
+/*USER MANAGEMENT*/
+.management-container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-list {
+    margin-top: 20px;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.username {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.edit-btn, .delete-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.edit-btn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #45a049;
+}
+
+.delete-btn {
+    background-color: #f44336;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #e53935;
+}
+
+.add-user {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.add-user input {
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.add-user button {
+    padding: 6px 12px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-user button:hover {
+    background-color: #45a049;
 }
