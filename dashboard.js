@@ -32,6 +32,31 @@ document.addEventListener("click", function(event) {
     }
 });
 
+
+//DASHBOARD
+// Function para kunin ang data mula sa API
+async function fetchDashboardData() {
+    try {
+        const response = await fetch('https://example.com/api/dashboard'); // Palitan ito ng totoong API endpoint
+        const data = await response.json();
+
+        // I-update ang UI gamit ang nakuha na data
+        document.getElementById('services-count').textContent = data.services;
+        document.getElementById('confirmed-count').textContent = data.confirmed;
+        document.getElementById('pending-count').textContent = data.pending;
+        document.getElementById('cancelled-count').textContent = data.cancelled;
+    } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+    }
+}
+
+// Tawagin ang function pag-load ng page
+document.addEventListener("DOMContentLoaded", fetchDashboardData);
+
+// I-refresh ang data kada 5 segundo (5000ms) para real-time update
+setInterval(fetchDashboardData, 5000);
+
+
 //APPOINTMENT
 function updateStatus(button, newStatus) {
     let row = button.closest("tr");

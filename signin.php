@@ -1,159 +1,93 @@
 <?php
+// Include the database connection
+require_once 'db_connection.php'; // Make sure the path is correct
+
 session_start();
-include 'config.php'; 
 
-// If the user is already logged in, redirect to home
-if (isset($_SESSION['username'])) {
-    header("Location: homepage.php");
-    exit();
-}
-
-// Function to show errors
 function showError($message) {
     return "<p class='error-message'>$message</p>";
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['username'], $_POST['password'])) {
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Using prepared statements to prevent SQL injection
-    $query = "SELECT * FROM users WHERE username = ?";
-    if ($stmt = mysqli_prepare($conn, $query)) {
-        mysqli_stmt_bind_param($stmt, "s", $username);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
+    // Basic validation
+    if (empty($username) || empty($password)) {
+        $error_message = showError("Please fill in both fields.");
+    } else {
+        // Query to check the user credentials using MySQLi
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->bind_param('s', $username); // 's' denotes string type
+        $stmt->execute();
+        $result = $stmt->get_result();
         
-        // Check if the user exists and verify the password
-        if ($user = mysqli_fetch_assoc($result)) {
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
             if (password_verify($password, $user['password'])) {
-                // Correct password, create session
-                $_SESSION['username'] = $user['username'];
-                
-                // Redirect to home or success page
-                header("Location: homepage.php");
+                $_SESSION['user'] = $username;
+                header("Location: dashboard.php");
                 exit();
             } else {
-                $error_message = showError('Invalid credentials');
+                $error_message = showError("Incorrect username or password.");
             }
         } else {
-            $error_message = showError('User not found');
+            $error_message = showError("User not found.");
         }
-        mysqli_stmt_close($stmt);
-    } else {
-        $error_message = showError('Error: Could not prepare statement');
+
+        // Close the statement
+        $stmt->close();
     }
 }
 
-mysqli_close($conn); 
+// Close the connection
+$conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="style.css" />
     <title>Fetch & Chill</title>
-  </head>
-  <body>
+</head>
+<body>
+<div class="container">
+    <div class="signin-signup">
+        <div class="classleft">
+            <form action="signin.php" method="POST" class="sign-in-form">
+                <h2 class="title">Sign in</h2>
+                
+                <!-- Displaying error message if it exists -->
+                <?php if (isset($error_message)) echo $error_message; ?>
 
-    <div class="container">
-      <div class="forms-container">
-          
-         <!--signin-->
-         <div class="signin-signup">
-          <form action="signin.php" method="POST" id="login-form" class="sign-in-form">
-            <h2 class="title">Sign in</h2>
+                <div class="input-field">
+                    <i class='bx bxs-user'></i>
+                    <input type="text" name="username" placeholder="Username" required />
+                </div>
+                <div class="input-field">
+                    <i class='bx bxs-lock-alt'></i>
+                    <input type="password" name="password" placeholder="Password" required />
+                </div>
 
-            <!-- Displaying error message if it exists -->
-            <?php if (isset($error_message)) echo $error_message; ?>
+                <!-- Forgot Password Link -->
+                <div class="forgot-password">
+                    <a href="forgot_password.php">Forgot Password?</a>
+                </div>
 
-            <div class="input-field">
-                <i class='bx bxs-user'></i>
-              <input type="text" name="username" placeholder="Username" required/>
-            </div>
-            <div class="input-field">
-              <i class='bx bxs-lock-alt'></i>
-              <input type="password" name="password" placeholder="Password" required/>
-            </div>
-            <input type="submit" value="Login" class="btn solid" />
-            <p class="social-text">Or Sign in with social platforms</p>
-            <div class="social-media">
-              <a href="#" class="social-icon">
-                <i class="bx bxl-facebook"></i>
-              </a>
-              <a href="#" class="social-icon">
-                <i class="bx bxl-google"></i>
-              </a>
-            </div>
-          </form>
-
-           
-
-            <!--signup-->
-          <form action="signup.php" method="POST" id="register-form" class="sign-up-form">
-            <h2 class="title">Sign up</h2>
-            <div class="input-field">
-              <i class="bx bxs-user"></i>
-              <input type="text" name="username" placeholder="Username" required/>
-            </div>
-            <div class="input-field">
-              <i class="bx bx-mail-send"></i>
-              <input type="email" name="email" placeholder="Email" required/>
-            </div>
-            <div class="input-field">
-              <i class="bx bxs-lock-alt"></i>
-              <input type="password" name="password" placeholder="Password" required/>
-            </div>
-            <input type="submit" class="btn" value="Sign up" />
-            <p class="social-text">Or Sign up with social platforms</p>
-            <div class="social-media">
-              <a href="#" class="social-icon">
-                <i class="bx bxl-facebook"></i>
-              </a>
-              <a href="#" class="social-icon">
-               <i class="bx bxl-google"></i>    
-              </a>
-            </div>
-          </form>
-
-    
-
-
+                <input type="submit" value="Login" class="btn solid" />
+            </form>
         </div>
-      </div>
 
-      <div class="panels-container">
-        <div class="panel left-panel">
-          <div class="content">
-            <h3>New here ?</h3>
-            <p>
-                A happy pet starts with the best care! Schedule your dog's appointment today for tail wags and good health.
-            </p>
-            <button class="btn transparent" id="sign-up-btn">
-              Sign up
-            </button>
-          </div>
-          <img src="img/undraw_cat_lqdj.svg" class="image" alt="" />
+        <div class="classright">
+            <img src="img/undraw_dog_jfxm.svg" class="image" alt="Dog Illustration" />
         </div>
-        <div class="panel right-panel">
-          <div class="content">
-            <h3>Hi Friend ?</h3>
-            <p>
-                Your pup deserves the best care! Book an appointment today for a healthy, happy tail-wagging companion.
-            </p>
-            <button class="btn transparent" id="sign-in-btn">
-              Sign in
-            </button>
-          </div>
-          <img src="img/undraw_dog_jfxm.svg" class="image" alt="" />
-        </div>
-      </div>
     </div>
+</div>
+
 
     <script src="script.js"></script>
-  </body>
+</body>
 </html>

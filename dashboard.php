@@ -57,13 +57,38 @@ if (!isset($_SESSION['username'])) {
         <!-- Dashboard -->
         <div id="dashboard" class="content-section">
             <h1>Dashboard</h1>
-            <div class="box-container">
-                <div class="content-box">Services</div>
-                <div class="content-box">Confirmed Request</div>
-                <div class="content-box">Pending Request</div>
-                <div class="content-box">Cancelled Request</div>
+                <div class="box-container">
+                    <div class="content-box">
+                        <i class='bx bx-cog'></i>
+                    <div>
+                    <p>Services</p>
+                    <h2 id="services-count">0</h2>
+                </div>
+            </div>
+        <div class="content-box">
+            <i class='bx bxs-check-circle'></i>
+                <div>
+                    <p>Confirmed Requests</p>
+                    <h2 id="confirmed-count">0</h2>
+                </div>
+            </div>
+            <div class="content-box">
+                <i class='bx bx-time-five'></i>
+                <div>
+                    <p>Pending Requests</p>
+                    <h2 id="pending-count">0</h2>
+                </div>
+            </div>
+            <div class="content-box">
+                <i class='bx bxs-x-circle'></i>
+                <div>
+                    <p>Cancelled Requests</p>
+                    <h2 id="cancelled-count">0</h2>
+                </div>
             </div>
         </div>
+    </div>
+
 
         <!-- Appointments -->
         <div id="appointments" class="appointment-container" style="display:none;">

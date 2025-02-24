@@ -20,7 +20,7 @@ CREATE TABLE admin (
 
 <!--sample admin account -->
 INSERT INTO admin (username, password, email)
-VALUES ('admin_user', MD5('securepassword'), 'admin@email.com');
+VALUES ('admin', MD5('securepassword'), 'admin@email.com');
 
 
 

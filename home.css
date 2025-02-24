@@ -180,6 +180,7 @@
 .btn_dashboard:active {
     background-color: #D07F2A !important;
     transform: scale(0.95);
+}
 
 
 @media (max-width: 768px) {
