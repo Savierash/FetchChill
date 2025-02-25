@@ -83,7 +83,7 @@ $conn->close();
         </div>
 
         <div class="classright">
-            <img src="img/pic15.jpg" class="image" alt="Forgot Password Illustration" />
+            <img src="img/undraw_forgot-password_odai.svg" class="image" alt="Forgot Password Illustration" />
         </div>
     </div>
 </div>

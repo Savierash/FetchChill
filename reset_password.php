@@ -59,12 +59,14 @@ $conn->close();
                 <h2 class="title">Reset Your Password</h2>
 
                 <!-- New Password Field -->
-                <div class="input-field">
+                <div class="input-fields">
+                    <i class='bx bxs-lock-alt'></i>
                     <input type="password" name="new_password" placeholder="Enter new password" required />
                 </div>
 
                 <!-- Confirm Password Field -->
-                <div class="input-field">
+                <div class="input-fields">
+                    <i class='bx bxs-lock-alt'></i>
                     <input type="password" name="confirm_password" placeholder="Confirm new password" required />
                 </div>
 
@@ -77,7 +79,7 @@ $conn->close();
         </div>
 
         <div class="classright">
-            <img src="img/pic16.jpg" class="image" alt="Reset Password Illustration" />
+            <img src="img/undraw_my-password_iyga.svg" class="image" alt="Reset Password Illustration" />
         </div>
     </div>
 </div>

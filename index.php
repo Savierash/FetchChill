@@ -21,42 +21,41 @@ function showError($error) {
     <title>Fetch & Chill</title>
 </head>
 <body>
-<div class="container">
-    <div class="forms-container">
-        <!-- Sign-in Form -->
-        <div class="signin-signup" id="login-form">
-            <div class="classleft">
-                <form action="signin.php" method="POST" class="sign-in-form">
-                    <h2 class="title">Sign in</h2>
+    <div class="container">
+        <div class="forms-container">
+            <!-- Sign-in Form -->
+            <div class="signin-signup" id="login-form">
+                <div class="classleft">
+                    <form action="signin.php" method="POST" class="sign-in-form">
+                        <h2 class="title">Sign in</h2>
 
-                    <!--error message-->
-                    <?= showError($error['signin']) ?>
+                        <!-- Error message -->
+                        <?= showError($error['signin']) ?>
 
-                    <div class="input-field">
-                        <i class='bx bxs-user'></i>
-                        <input type="text" name="username" placeholder="Username" required />
-                    </div>
-                    <div class="input-field">
-                        <i class='bx bxs-lock-alt'></i>
-                        <input type="password" name="password" placeholder="Password" required />
-                    </div>
+                        <div class="input-field">
+                            <i class='bx bxs-user'></i>
+                            <input type="text" name="username" placeholder="Username" required />
+                        </div>
+                        <div class="input-field">
+                            <i class='bx bxs-lock-alt'></i>
+                            <input type="password" name="password" placeholder="Password" required />
+                        </div>
 
-                    <!-- Forgot Password Link -->
-                    <div class="forgot-password">
-                        <a href="forgot_password.php">Forgot Password?</a>
-                    </div>
+                        <!-- Forgot Password Link -->
+                        <div class="forgot-password">
+                            <a href="forgot_password.php">Forgot Password?</a>
+                        </div>
 
-                    <input type="submit" value="Login" class="btn solid" />
-                </form>
-            </div>
+                        <input type="submit" value="Login" class="btn solid" />
+                    </form>
+                </div>
 
-            <div class="classright">
-                <img src="img/undraw_cat_lqdj.svg" class="image" alt="Dog Illustration" />
+                <div class="classright">
+                    <img src="img/undraw_cat_lqdj.svg" class="image" alt="Dog Illustration" />
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 
     <script src="script.js"></script>
 </body>
