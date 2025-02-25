@@ -1,12 +1,12 @@
-<?php
+<!--<?php
 
-session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit();
-}
+//session_start();
+//if (!isset($_SESSION['username'])) {
+    //header("Location: index.php");
+    //exit();
+//}
 
-?>
+?>-->
 
 
 <!DOCTYPE html>
@@ -37,7 +37,7 @@ if (!isset($_SESSION['username'])) {
 <section class="home" id="home">
     <div class="home-container">
         <div class="home-content">
-            <h1>Hi, <span class="username"><?php echo $_SESSION['username']; ?>!</h1></span>
+            <h1>Hi, <span class="username"><!--<?php //echo $_SESSION['username']; ?>-->!</h1></span>
             <h1>Welcome to Fetch&Chill</h1>
             <p>Where every fetch ends with cuddle</p>
             <!-- Go to Dashboard Button -->
@@ -199,42 +199,6 @@ if (!isset($_SESSION['username'])) {
         </div>
     </div>
 </section>
-
-
-<!-- CONTACT SECTION -->
-<section class="contact" id="contact">
-    <div class="contact-container">
-        <!-- Left Side: Contact Form -->
-        <div class="contact-form">
-            <h2>Contact Us</h2>
-            <form action="send_message.php" method="POST">
-                <label for="name">Your Name:</label>
-                <input type="text" id="name" name="name" required>
-
-                <label for="email">Your Email:</label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="message">Your Message:</label>
-                <textarea id="message" name="message" required></textarea>
-
-                <div class="form-buttons">
-                    <button type="submit">Send Message</button>
-                </div>
-            </form>
-        </div>
-        
-        <!-- Right Side: Contact Details -->
-        <div class="contact-details">
-            <h2>Get in Touch</h2>
-            <p>If you have any questions or inquiries, feel free to contact us.</p>
-            <p>Email: info@fetchandchill.com</p>
-            <p>Phone: (123) 456-7890</p>
-            <p>Address: 123 Fetch St., Chill City</p>
-        </div>
-    </div>
-</section>
-
-
 
 
 <script src="home.js"></script>

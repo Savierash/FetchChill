@@ -72,25 +72,67 @@ function updateStatus(button, newStatus) {
     }
 }
 
-//MEDICAL RECORDS
+
+// Medical Records
 document.getElementById("medicalForm").addEventListener("submit", function(event) {
     event.preventDefault();
-    
+
+    // Get values from the form
+    let owner = document.getElementById("owner").value;
+    let pet = document.getElementById("pet").value;
     let breed = document.getElementById("breed").value;
     let weight = document.getElementById("weight").value;
+    let age = document.getElementById("age").value;
+    let gender = document.getElementById("gender").value;
     let date = document.getElementById("date").value;
     let diagnosis = document.getElementById("diagnosis").value;
     let treatment = document.getElementById("treatment").value;
-    
+
+    // Insert new record into the table
     let table = document.getElementById("recordsTable");
     let row = table.insertRow();
-    row.insertCell(0).innerText = breed;
-    row.insertCell(1).innerText = weight;
-    row.insertCell(2).innerText = date;
-    row.insertCell(3).innerText = diagnosis;
-    row.insertCell(4).innerText = treatment;
-    
+
+    // Insert cells into the new row
+    row.insertCell(0).innerText = owner;
+    row.insertCell(1).innerText = pet;
+    row.insertCell(2).innerText = breed;
+    row.insertCell(3).innerText = weight;
+    row.insertCell(4).innerText = age;
+    row.insertCell(5).innerText = gender;
+    row.insertCell(6).innerText = date;
+    row.insertCell(7).innerText = diagnosis;
+    row.insertCell(8).innerText = treatment;
+
+    // Reset the form
     document.getElementById("medicalForm").reset();
+
+    // Send the data to PHP using Fetch API (POST request)
+    const petData = {
+        ownername: owner,
+        petname: pet,
+        breed: breed,
+        weight: weight,
+        age: age,
+        gender: gender,
+        visitdate: date,
+        diagnosis: diagnosis,
+        treatment: treatment
+    };
+
+    fetch('petrecords.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(petData),
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message); // Show success message
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
 });
 
 

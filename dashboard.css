@@ -295,7 +295,8 @@ body {
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    margin-top: 60px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); 
 }
 
 .appointment-container {
@@ -335,23 +336,15 @@ th {
 .cancel { background-color: red; color: white; }
 
 
-/*MEDICAL RECORDS*/
+/* MEDICAL RECORDS */
 .medical-container {
     width: 80%;
     margin: auto;
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.med-container {
-    width: 80%;
-    margin: auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 60px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .table-med {
@@ -432,7 +425,8 @@ th {
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 60px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .user-list {

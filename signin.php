@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = $result->fetch_assoc();
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user'] = $username;
-                header("Location: dashboard.php");
+                header("Location: homepage.php");
                 exit();
             } else {
                 $error_message = showError("Incorrect username or password.");

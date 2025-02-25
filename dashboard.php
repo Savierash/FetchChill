@@ -1,10 +1,10 @@
-<?php
-session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit();
-}
-?>
+<!--<?php
+//session_start();
+//if (!isset($_SESSION['username'])) {
+    //header("Location: index.php");
+    //exit();
+//}
+?>-->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -125,8 +125,12 @@ if (!isset($_SESSION['username'])) {
             <table class="table-med">
             <thead>
               <tr>
+                <th class="thead">Owner Name</th>
+                <th class="thead">Pet Name</th>
                 <th class="thead">Breed</th>
                 <th class="thead">Weight (kg)</th>
+                <th class="thead">Age</th>
+                <th class="thead">Gender</th>
                 <th class="thead">Date of Check-up</th>
                 <th class="thead">Diagnosis</th>
                 <th class="thead">Treatment</th>
@@ -140,8 +144,12 @@ if (!isset($_SESSION['username'])) {
 
             <h2>Add Medical Record</h2>
             <form class="med-form" id="medicalForm">
+                <input class="med-input" type="text" id="owner" placeholder="Owner Name" required>
+                <input class="med-input" type="text" id="pet" placeholder="Pet Name" required>
                 <input class="med-input" type="text" id="breed" placeholder="Breed" required>
                 <input class="med-input" type="number" id="weight" placeholder="Weight (kg)" required>
+                <input class="med-input" type="number" id="age" placeholder="Age" required>
+                <input class="med-input" type="text" id="gender" placeholder="Gender" required>
                 <input class="med-input" type="date" id="date" required>
                 <input class="med-input" type="text" id="diagnosis" placeholder="Diagnosis" required>
                 <input class="med-input" type="text" id="treatment" placeholder="Treatment" required>
