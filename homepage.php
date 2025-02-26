@@ -20,57 +20,57 @@
   </head>   
   <body>
 
-<!--NAVBAR-->
-<nav class="navbar">
-    <a href="#"><img src="img/logo.jpg.jpg" alt="Logo" class="logo"></a>
-    <ul class="nav-links">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about-us">About Us</a></li>
-        <li><a href="#services">Services</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
-    </ul>
-</nav>
+    <!------------NAVBAR-------------->
+    <nav class="navbar">
+        <a href="#"><img src="img/logo.jpg.jpg" alt="Logo" class="logo"></a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about-us">About Us</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
+            </ul>
+    </nav>
 
 
-<!-- HOME SECTION -->
-<section class="home" id="home">
-    <div class="home-container">
-        <div class="home-content">
-            <h1>Hi, <span class="username"><!--<?php //echo $_SESSION['username']; ?>-->!</h1></span>
-            <h1>Welcome to Fetch&Chill</h1>
-            <p>Where every fetch ends with cuddle</p>
-            <!-- Go to Dashboard Button -->
-            <a href="dashboard.php" class="btn_dashboard">Go to Dashboard</a>
+    <!-----------HOME SECTION------------->
+    <section class="home" id="home">
+        <div class="home-container">
+            <div class="home-content">
+                <h1>Hi, <span class="username"><!--<?php //echo $_SESSION['username']; ?>-->!</h1></span>
+                <h1>Welcome to Fetch&Chill</h1>
+                <p>Where every fetch ends with cuddle</p>
+                <!------------Go to Dashboard Button-------------->
+                <a href="dashboard.php" class="btn_dashboard">Go to Dashboard</a>
+            </div>
+            <div class="home-image">
+                <img src="img/pic4.jpg" alt="Happy Dog & Cat">
+            </div>
         </div>
-        <div class="home-image">
-            <img src="img/pic4.jpg" alt="Happy Dog & Cat">
-        </div>
-    </div>
-</section>
+    </section>
 
 
-<!-- ABOUT US SECTION -->
-<section class="about-us" id="about-us">
-    <div class="about-container">
-        <div class="about-content">
-            <h2>About us</h2>
-            <p>We know life get’s  busy, and keeping up with your pet’s <br/> 
-            care can be a challenge--that’s where Fetch&Chill comes in!<br/> 
-            Our app helps fur parent’s schedule grooming, <br/> 
-            vaccinations, trainings, and health check-ups with ease. No <br/>
-             more missed vet visits or late meals--our feeding time <br/> 
-             reminders, appointment manager, and medical records <br/> 
-             tracker keep everything in one place. Because a happy,<br/> 
-             healthy pet means more time for belly rubs, tail wags, and cuddles.
-            </p>
+    <!----------------ABOUT US SECTION------------------->
+    <section class="about-us" id="about-us">
+        <div class="about-container">
+            <div class="about-content">
+                <h2>About us</h2>
+                <p>We know life get’s  busy, and keeping up with your pet’s <br/> 
+                care can be a challenge--that’s where Fetch&Chill comes in!<br/> 
+                Our app helps fur parent’s schedule grooming, <br/> 
+                vaccinations, trainings, and health check-ups with ease. No <br/>
+                more missed vet visits or late meals--our feeding time <br/> 
+                reminders, appointment manager, and medical records <br/> 
+                tracker keep everything in one place. Because a happy,<br/> 
+                healthy pet means more time for belly rubs, tail wags, and cuddles.
+                </p>
+            </div>
+            <div class="about-image">
+                <img src="img/pic13.jpg" alt="Happy Pet with Owner">
+            </div>
         </div>
-        <div class="about-image">
-            <img src="img/pic13.jpg" alt="Happy Pet with Owner">
-        </div>
-    </div>
 
-    <!-- Bottom 3 Containers -->
+    <!-------------------Bottom 3 Containers------------------->
     <div class="about-bottom-containers">
         <div class="bottom-container">
             <img src="img/pic14.jpg" alt="Pet Care">
@@ -86,119 +86,61 @@
             <p>Pets are more than just animals they’re family. They fill our homes with love, loyalty, and happiness.</p>
         </div>
     </div>
-</section>
+    </section>
 
 
-<!-- SERVICES SECTION -->
-<section class="service-highlight" id="services">
-    <div class="service-highlight-container">
-        <div class="service-highlight-text">
-            <h2>Find Your Good Services <br> For Your Pet</h2>
-        </div>
-        <div class="service-highlight-image">
-            <img src="img/pic9.jpg" alt="Happy Pet with Owner">
-        </div>
-    </div>
-</section>
-
-<section class="services">
-    <div class="services-container">
-        <h2>Services we offer</h2>
-        <div class="services-list">
-            <div class="service-item" onclick="showInfo(0)">
-                <img src="img/pic5.jpg" alt="Medical Care">
-                <h3>Medical Care</h3>
+    <!--------------------SERVICES SECTION--------------------->
+    <section class="service-highlight" id="services">
+        <div class="service-highlight-container">
+            <div class="service-highlight-text">
+                <h2>Find Your Good Services <br> For Your Pet 
+                    <p><br/>including veterinary, grooming, vaccine and
+                        <br/> foods, ensuring their health, happiness and
+                        <br/> comfort every day.
+                    </p>
+                </h2>
             </div>
-            <div class="service-item" onclick="showInfo(1)">
-                <img src="img/pic6.jpg" alt="Grooming">
-                <h3>Grooming</h3>
-            </div>
-            <div class="service-item" onclick="showInfo(2)">
-                <img src="img/pic7.jpg" alt="Vaccine">
-                <h3>Vaccine</h3>
-            </div>
-            <div class="service-item" onclick="showInfo(3)">
-                <img src="img/pic8.jpg" alt="Training">
-                <h3>Training</h3>
+            <div class="service-highlight-image">
+                <img src="img/pic9.jpg" alt="Happy Pet with Owner">
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Fullscreen Info Pop-up -->
-<div class="fullscreen-info">
-    <div class="info-container">
-        <h2 id="service-title">Service Title</h2>
-        <p id="service-description">Details about the service.</p>
-        <button onclick="closeFullscreenInfo()">Close</button>
-    </div>
-</div>
-
-
-<!-- PET PROFILE SECTION -->
-<section class="pet-profile">
-    <div class="pet-profile-title">
-        <h2>PET INFO</h2>
-    </div>
-
-    <div class="profile-container">
-        <!-- Pet Profile Container -->
-        <div class="profile-left-container">
-            <h2>Pet Profile</h2>
-            <div class="profile-left">
-                <img id="pet-image" src="img/pet-placeholder.jpg" alt="Pet Image" class="pet-image">
-                
-                <div class="upload-container">
-                    <button type="button" onclick="uploadImage()">Upload Image</button>
+    <section class="services">
+        <div class="services-container">
+            <h2>Services we offer</h2>
+            <div class="services-list">
+                <div class="service-item" onclick="showInfo(0)">
+                    <img src="img/pic5.jpg" alt="Medical Care">
+                    <h3>Medical Care</h3>
+                </div>
+                <div class="service-item" onclick="showInfo(1)">
+                    <img src="img/pic6.jpg" alt="Grooming">
+                    <h3>Grooming</h3>
+                </div>
+                <div class="service-item" onclick="showInfo(2)">
+                    <img src="img/pic7.jpg" alt="Vaccine">
+                    <h3>Vaccine</h3>
+                </div>
+                <div class="service-item" onclick="showInfo(3)">
+                    <img src="img/pic8.jpg" alt="Training">
+                    <h3>Training</h3>
                 </div>
             </div>
         </div>
-        
-        <!-- Pet Details Container -->
-        <div class="profile-right-container">
-            <h2>Pet Details</h2>
-            <div class="profile-right">
-                <form id="pet-form">
-                    <label for="pet-name">Name:</label>
-                    <input type="text" id="pet-name" name="pet-name" required>
-                    
-                    <div class="grid-container">
-                        <div>
-                            <label for="pet-age">Age:</label>
-                            <input type="number" id="pet-age" name="pet-age" required>
-                        </div>
-                        <div>
-                            <label for="pet-dob">Date of Birth:</label>
-                            <input type="date" id="pet-dob" name="pet-dob" required>
-                        </div>
-                        <div>
-                            <label for="pet-gender">Gender:</label>
-                            <select id="pet-gender" name="pet-gender">
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="pet-breed">Breed:</label>
-                            <input type="text" id="pet-breed" name="pet-breed" required>
-                        </div>
-                    </div>
-                    
-                    <label for="owner-name">Owner's Name:</label>
-                    <input type="text" id="owner-name" name="owner-name" required>
-                    
-                    <label for="owner-address">Owner's Address:</label>
-                    <textarea id="owner-address" name="owner-address" required></textarea>
-                    
-                    <div class="form-buttons">
-                        <button type="button" onclick="goBack()">Back</button>
-                        <button type="submit">Save</button>
-                    </div>
-                </form>
-            </div>
+    </section>
+
+    <!-----------------------Fullscreen Info Pop-up-------------------->
+    <div class="fullscreen-info">
+        <div class="info-container">
+            <h2 id="service-title">Service Title</h2>
+            <p id="service-description">Details about the service.</p>
+            <button onclick="closeFullscreenInfo()">Close</button>
         </div>
     </div>
-</section>
+
+
+
 
 
 <script src="home.js"></script>
