@@ -449,21 +449,28 @@ th {
 
 
 
-/*USER MANAGEMENT*/
+/* USER MANAGEMENT */
 .management-container {
     width: 80%;
-    margin: auto;
+    margin: 60px auto 20px;
     padding: 20px;
     background-color: #f9f9f9;
     border-radius: 10px;
-    margin-top: 60px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
 }
 
+/* User List */
 .user-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px; /* Adjusted the gap for a more compact view */
+    padding: 20px;
+    justify-content: center;
     margin-top: 20px;
 }
 
+/* User Box */
 .user-item {
     display: flex;
     justify-content: space-between;
@@ -471,15 +478,19 @@ th {
     background-color: #fff;
     padding: 10px;
     margin-bottom: 10px;
-    border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    width: 100%; /* Set width to 100% for responsiveness */
+    height: auto; /* Height will adjust based on content */
 }
 
+/* Username Styling */
 .username {
     font-size: 16px;
     font-weight: bold;
 }
 
+/* Buttons (Edit & Delete) */
 .edit-btn, .delete-btn {
     padding: 5px 10px;
     font-size: 14px;
@@ -507,10 +518,12 @@ th {
     background-color: #e53935;
 }
 
+/* Add User Section */
 .add-user {
     margin-top: 20px;
     display: flex;
     gap: 10px;
+    justify-content: center;
 }
 
 .add-user input {

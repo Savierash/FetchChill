@@ -170,17 +170,18 @@
 
         <!-- User Management -->
         <div id="userManagement" class="management-container" style="display:none;">
-          <h1>User and Management</h1>
+            <h1>User Management</h1>
+  
             <div class="user-list" id="userList">
         <!-- User list will appear here -->
         </div>
 
         <!-- Add User Form -->
         <div class="add-user">
-          <input type="text" id="newUserName" placeholder="Enter new user name" />
+            <input type="text" id="newUserName" placeholder="Enter new user name" />
             <button id="addUserBtn">Add User</button>
-        </div>
-      </div>
+    </div>
+    </div>
 
 <script src="dashboard.js"></script>
 </body>

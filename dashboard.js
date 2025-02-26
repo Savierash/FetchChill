@@ -175,13 +175,17 @@ document.getElementById("medicalForm").addEventListener("submit", function(event
 
 
 //USER MANAGEMENT
-// Initial user data
-let users = ['Suniga', 'Naaantok na'];
+// Assuming users array is initialized somewhere in the code
+let users = [];  // If you haven't defined this, initialize it
 
 // Function to render the user list
 function renderUserList() {
     const userListDiv = document.getElementById('userList');
     userListDiv.innerHTML = ''; // Clear existing list
+
+    if (users.length === 0) {
+        userListDiv.innerHTML = 'No users available.'; // Optional message if no users exist
+    }
 
     users.forEach((user, index) => {
         const userItem = document.createElement('div');
@@ -211,23 +215,28 @@ function renderUserList() {
 // Function to add a new user
 document.getElementById('addUserBtn').onclick = function() {
     const newUserName = document.getElementById('newUserName').value.trim();
-    if (newUserName) {
+    
+    if (newUserName && !users.includes(newUserName)) { // Check for empty or duplicate username
         users.push(newUserName); // Add the new user to the list
         renderUserList(); // Re-render the user list
         document.getElementById('newUserName').value = ''; // Clear input field
+    } else {
+        alert('Please enter a valid, unique username.'); // Optional alert for invalid input
     }
 };
 
 // Function to delete a user
 function deleteUser(index) {
-    users.splice(index, 1); // Remove the user from the array
-    renderUserList(); // Re-render the user list
+    if (index >= 0 && index < users.length) {
+        users.splice(index, 1); // Remove the user from the array
+        renderUserList(); // Re-render the user list
+    }
 }
 
-// Function to edit a user (can be expanded to handle editing)
+// Function to edit a user
 function editUser(index) {
     const newUserName = prompt('Edit username:', users[index]);
-    if (newUserName) {
+    if (newUserName && newUserName !== users[index]) { // Check if the new name is different
         users[index] = newUserName; // Update the user name
         renderUserList(); // Re-render the user list
     }
