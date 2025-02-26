@@ -29,6 +29,3 @@ function showInfo(index) {
 function closeFullscreenInfo() {
    fullscreenInfo.classList.remove('show');
 }
-
-
-

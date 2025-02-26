@@ -142,32 +142,63 @@ body {
     color: #000000;
 }
 
-/* Notification Dropdown */
+/*Notification Dropdown */
 .notification-dropdown {
-    display: none;
-    position: absolute;
-    top: 40px;
-    right: 10px;
     width: 250px;
     background: white;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-    padding: 10px;
-    z-index: 1000;
+    overflow: hidden;
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 40px;
 }
-.notification-dropdown.active {
-    display: block;
+.notification-header {
+    font-weight: bold;
+    padding: 10px;
+    text-align: center;
+}
+.notification-filters {
+    display: flex;
+    justify-content: space-around;
+    padding: 5px;
+}
+.notification-filters button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 5px 10px;
+    transition: background 0.3s;
+}
+.notification-filters button:hover {
+    background: #f0f0f0;
+    border-radius: 3px;
+}
+.notification-filters .active {
+    background: #ddd;
+    border-radius: 3px;
+}
+.notification-list {
+    max-height: 200px;
+    overflow-y: auto;
 }
 .notification-item {
     padding: 10px;
-    border-bottom: 1px solid #ddd;
-    font-size: 14px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
 }
 .notification-item:last-child {
     border-bottom: none;
 }
-.notification-item:hover {
-    background: #f4f4f4;
+.unread {
+    font-weight: bold;
+}
+.read {
+    color: gray;
+    font-weight: normal;
 }
 
 

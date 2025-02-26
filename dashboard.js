@@ -19,18 +19,55 @@ function changeContent(contentId) {
 //for notification bells
 function toggleDropdown() {
     var dropdown = document.getElementById("notifDropdown");
-    dropdown.classList.toggle("active");
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
 }
 
-// Close dropdown when clicking outside
 document.addEventListener("click", function(event) {
     var dropdown = document.getElementById("notifDropdown");
     var bell = document.querySelector(".notification-bell");
-
-    if (!dropdown.contains(event.target) && !bell.contains(event.target)) {
-        dropdown.classList.remove("active");
+    
+    if (dropdown && bell && !dropdown.contains(event.target) && !bell.contains(event.target)) {
+        dropdown.style.display = "none";
     }
 });
+
+document.getElementById('unreadBtn').addEventListener('click', function() {
+    document.getElementById('unreadBtn').classList.add('active');
+    document.getElementById('allBtn').classList.remove('active');
+    document.querySelectorAll('.notification-item').forEach(item => {
+        if (!item.classList.contains('unread')) {
+            item.style.display = 'none';
+        } else {
+            item.style.display = 'block';
+        }
+    });
+});
+
+document.getElementById('allBtn').addEventListener('click', function() {
+    document.getElementById('allBtn').classList.add('active');
+    document.getElementById('unreadBtn').classList.remove('active');
+    document.querySelectorAll('.notification-item').forEach(item => {
+        item.style.display = 'block';
+    });
+});
+
+function markAsRead(element) {
+    element.classList.remove('unread');
+    element.classList.add('read');
+}
+
+document.getElementById('allBtn').addEventListener('click', function() {
+    document.getElementById('allBtn').classList.add('active');
+    document.getElementById('unreadBtn').classList.remove('active');
+    document.querySelectorAll('.notification-item').forEach(item => {
+        item.style.display = 'block';
+    });
+});
+
+function markAsRead(element) {
+    element.classList.remove('unread');
+    element.classList.add('read');
+}
 
 
 //DASHBOARD

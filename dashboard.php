@@ -47,12 +47,23 @@
             <span class="badge" id="notifCount">3</span> 
         </div>
 
-        <!-- Notification Dropdown -->
-        <div id="notifDropdown" class="notification-dropdown">
-            <div class="notification-item">🔔 New message received</div>
-            <div class="notification-item">📌 Medical Request</div>
-            <div class="notification-item">✅ Client request approved</div>
+    <!-- Notification Dropdown -->
+    <div id="notifDropdown" class="notification-dropdown">
+        <div class="notification-header">
+            <span>Notifications</span>
         </div>
+        <hr>
+        <div class="notification-filters">
+            <button id="unreadBtn" class="filter-btn active">Unread</button>
+            <button id="allBtn" class="filter-btn">All</button>
+        </div>
+        <hr>
+        <div class="notification-list">
+            <div class="notification-item unread" onclick="markAsRead(this)">🔔 New message received</div>
+            <div class="notification-item unread" onclick="markAsRead(this)">📌 Medical Request</div>
+            <div class="notification-item read" onclick="markAsRead(this)">✅ Client request approved</div>
+        </div>
+    </div>
 
         <!-- Dashboard -->
         <div id="dashboard" class="content-section">

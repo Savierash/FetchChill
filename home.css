@@ -15,6 +15,17 @@
   }
 
 /***************************NAVBAR********************************/
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .navbar {
     display: flex;
     align-items: center;
@@ -27,6 +38,7 @@
     top: 0;
     left: 0;
     z-index: 1000;
+    animation: fadeInDown 0.5s ease-out;
 }
 
 .logo {
@@ -79,7 +91,6 @@
     transform: scale(0.95);
 }
 
-
 /**************************Responsive Navbar*******************************/
 @media (max-width: 768px) {
     .navbar {
@@ -91,10 +102,22 @@
         flex-direction: column;
         align-items: center;
         margin-top: 10px;
+        animation: slideDown 0.5s ease-out;
     }
 }
-  
+
 /*****************************HOME SECTION*************************/
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .home {
     background-color: #C5DAEF;
     padding: 80px 20px;
@@ -110,6 +133,7 @@
     max-width: 1200px;
     gap: 40px;
     text-align: left;
+    animation: fadeInUp 1s ease-out;
 }
 
 .home-content {
@@ -121,13 +145,11 @@
     font-weight: bold;
 }
 
-
 .home-content h1 {
     font-size: 70px;
     margin-bottom: 15px;
     font-family: "Mochiy Pop One";
     color: #000000;
-    
 }
 
 .home-content p {
@@ -159,6 +181,18 @@
 }
 
 /*********************Button got to dashboard**************************/
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 .btn_dashboard {
     display: inline-block;
     padding: 10px 20px;
@@ -174,14 +208,13 @@
 
 .btn_dashboard:hover {
     background-color: #E4813A !important;
-    transform: scale(1.05);
+    animation: pulse 1s infinite;
 }
 
 .btn_dashboard:active {
     background-color: #D07F2A !important;
     transform: scale(0.95);
 }
-
 
 @media (max-width: 768px) {
     .home-container {
@@ -194,15 +227,23 @@
     }
 }
 
-
-  
 /********************ABOUT SECTION******************/
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 .about-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 70px;
     background-color: #C5DAEF;
+    animation: fadeIn 1s ease-out;
 }
 
 .about-content h2 {
@@ -230,10 +271,18 @@
     width: 100%;
     height: auto;
     border-radius: 53px;
-
+    animation: fadeIn 1.5s ease-out;
 }
 
 /*******************Bottom Containers******************/
+@keyframes scaleUp {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.05);
+    }
+}
 
 .about-bottom-containers {
     display: flex;
@@ -271,14 +320,22 @@
 }
 
 .bottom-container:hover {
-    transform: translateY(-10px);
+    animation: scaleUp 0.3s ease-out forwards;
 }
 
-
-
-
-
 /***************Service section******************/
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-20px);
+    }
+    60% {
+        transform: translateY(-10px);
+    }
+}
+
 .services {
     background-color: #E4EFE4; 
     padding: 100px;
@@ -295,7 +352,6 @@
     margin-bottom: 30px;
     color: #333;
 }
-
 
 .services-list {
     display: flex;
@@ -317,48 +373,8 @@
     transition: transform 0.3s ease-in-out;
 }
 
-.fullscreen-info {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    z-index: 100;
-    padding: 20px;
-}
-.fullscreen-info.show {
-    display: flex; 
-}
-
-.info-container {
-    background: #7AC8BB;
-    color: black;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 500px;
-    text-align: center;
-}
-.info-container button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    border: none;
-    background: #007bff;
-    color: white;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-.info-container button:hover {
-    background: #0056b3;
-}
-
 .service-item:hover {
-    transform: translateY(-10px); 
+    animation: bounce 0.5s;
 }
 
 .service-item img {
@@ -378,6 +394,50 @@
     font-size: 16px;
     color: #666;
     line-height: 1.5;
+}
+
+.fullscreen-info {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 100;
+    padding: 20px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.fullscreen-info.show {
+    display: flex; 
+}
+
+.info-container {
+    background: #7AC8BB;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    text-align: center;
+}
+
+.info-container button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.info-container button:hover {
+    background: #0056b3;
 }
 
 .service-highlight {
