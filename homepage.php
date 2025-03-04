@@ -1,12 +1,12 @@
-<!--<?php
+<?php
 
-//session_start();
-//if (!isset($_SESSION['username'])) {
-    //header("Location: index.php");
-    //exit();
-//}
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit();
+}
 
-?>-->
+?>
 
 
 <!DOCTYPE html>
@@ -36,7 +36,7 @@
     <section class="home" id="home">
         <div class="home-container">
             <div class="home-content">
-                <h1>Hi, <span class="username"><!--<?php //echo $_SESSION['username']; ?>-->!</h1></span>
+                <h1>Hi, <span class="username"> <?php echo $_SESSION['username']; ?>!</h1></span>
                 <h1>Welcome to Fetch&Chill</h1>
                 <p>Where every fetch ends with cuddle</p>
                 <!------------Go to Dashboard Button-------------->

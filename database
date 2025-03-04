@@ -20,20 +20,9 @@ CREATE TABLE admin (
 
 <!--sample admin account -->
 INSERT INTO admin (username, password, email)
-VALUES ('admin', MD5('securepassword'), 'admin@email.com');
+VALUES ('admin', MD5('admin123'), 'admin123@email.com');
 
 
-
-
-<!-- Create a database -->
-<!-- Contact database -->
-CREATE TABLE contact_messages (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    message TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
 
 

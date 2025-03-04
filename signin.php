@@ -1,6 +1,5 @@
 <?php
-// Include the database connection
-require_once 'db_connection.php'; // Make sure the path is correct
+require_once 'db_connection.php'; 
 
 session_start();
 
@@ -8,41 +7,46 @@ function showError($message) {
     return "<p class='error-message'>$message</p>";
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+$error_message = '';  
 
-    // Basic validation
-    if (empty($username) || empty($password)) {
-        $error_message = showError("Please fill in both fields.");
-    } else {
-        // Query to check the user credentials using MySQLi
-        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->bind_param('s', $username); // 's' denotes string type
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows > 0) {
-            $user = $result->fetch_assoc();
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user'] = $username;
-                header("Location: homepage.php");
-                exit();
-            } else {
-                $error_message = showError("Incorrect username or password.");
-            }
-        } else {
-            $error_message = showError("User not found.");
-        }
+// Default admin credentials
+$default_username = 'admin123';
+$default_password = 'admin123';  
 
-        // Close the statement
-        $stmt->close();
-    }
+
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
-// Close the connection
+$stmt = $conn->prepare("SELECT * FROM admin WHERE username = ? LIMIT 1");
+$stmt->bind_param("s", $default_username);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $admin = $result->fetch_assoc();
+    
+    if ($admin['password'] == $default_password) {
+        $_SESSION['username'] = $admin['username'];
+        $_SESSION['role'] = 'admin'; 
+        
+        
+        header("Location: homepage.php");
+        exit();
+    } else {
+        $error_message = showError("Incorrect password for the default admin.");
+    }
+} else {
+    $error_message = showError("No admin account found in the database.");
+}
+
+$stmt->close();
 $conn->close();
+
+echo $error_message; 
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -60,8 +64,8 @@ $conn->close();
             <form action="signin.php" method="POST" class="sign-in-form">
                 <h2 class="title">Sign in</h2>
                 
-                <!-- Displaying error message if it exists -->
-                <?php if (isset($error_message)) echo $error_message; ?>
+                <!-- Display error message if set -->
+                <?php if (!empty($error_message)) echo $error_message; ?>
 
                 <div class="input-field">
                     <i class='bx bxs-user'></i>
@@ -86,7 +90,6 @@ $conn->close();
         </div>
     </div>
 </div>
-
 
     <script src="script.js"></script>
 </body>
