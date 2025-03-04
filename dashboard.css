@@ -345,7 +345,7 @@ table {
     margin-top: 20px;
 }
 th, td {
-    border: 1px solid #ddd;
+    border: 1px solid black;
     padding: 10px;
     text-align: left;
 }
@@ -353,6 +353,15 @@ th, td {
 th {
     background-color: #7096D1;
 }
+
+.tableh {
+    color:white;
+}
+
+.h6{
+    color: white;
+}
+
 .status {
     font-weight: bold;
 }
@@ -366,6 +375,90 @@ th {
 .pending { background-color: orange; color: white; }
 .cancel { background-color: red; color: white; }
 
+/*Appointment title*/
+ .appointment-filter {
+    background-color: #ffffff;
+    padding: 15px;
+}
+
+.appointment-filter button {
+    color: #534E46;
+    border: none;
+    padding: 0 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.appointment-filter button:hover {
+    color: #1B3579; 
+    background-color: lightblue; 
+    border: none;
+    padding: 0 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    text-decoration: underline; 
+    text-decoration-color: #1B3579; 
+    text-decoration-thickness: 1px; 
+}
+
+/* Search Bar */
+.appointment-search {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+}
+
+#search-bar {
+    width: 100%;
+    padding: 15px 30px;
+    font-size: 16px;
+    border: 1px solid #5c5959;
+    border-radius: 15px;
+    outline: none;
+    padding-left: 35px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+#search-bar:hover {
+    border-color: #0077ff; 
+    box-shadow: 0 0 8px rgba(0, 119, 255, 0.3); 
+}
+
+#search-bar:focus {
+    border-color: #000000;
+    box-shadow: 0 0 12px rgba(0, 119, 255, 0.5); 
+}
+
+#search-bar::placeholder {
+    color: #999;
+    font-weight: bold;
+}
+
+.search-container i {
+    position: absolute;
+    left: 10px;
+    font-size: 30px;
+    color: #0077ff;
+    transition: color 0.3s ease; 
+}
+
+.search-container:hover i {
+    color: #005bb5; 
+}
+
 
 /* MEDICAL RECORDS */
 .medical-container {
@@ -378,6 +471,7 @@ th {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
+
 .table-med {
     width: 100%;
     border-collapse: collapse;
@@ -389,160 +483,73 @@ th {
     padding: 10px;
     text-align: left;
     background-color: #7096D1;
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 .med-form {
-    margin-top: 20px;
+    width: 100%;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .med-input {
-    display: block;
     width: 100%;
-    margin-bottom: 10px;
     padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    transition: all 0.3s ease;
     font-size: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.4);;
+    border-radius: 8px;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+    background: #C5DAEF;
 }
 
 .med-input:focus {
-    outline: none;
-    border-color: #7096D1;
-    background-color: #fff;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
 
-.btn-medical {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 12px 20px;
-    background-color: #7096D1;
+.med-button {
+    background: #007bff;
     color: white;
+    font-size: 16px;
+    padding: 10px;
     border: none;
     border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    transition: all 0.3s ease;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s;
 }
 
-.btn-medical:hover {
-    background-color: #5f82b0;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.btn-medical:active {
-    background-color: #4a6e94;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.btn-medical:focus {
-    outline: none;
-    border: 2px solid #5f82b0;
+.med-button:hover {
+    background: #0056b3;
 }
 
 
-
-/* USER MANAGEMENT */
-.management-container {
-    width: 80%;
-    margin: 60px auto 20px;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    text-align: center;
-}
-
-/* User List */
-.user-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 20px; /* Adjusted the gap for a more compact view */
-    padding: 20px;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-/* User Box */
-.user-item {
+/*Medical search bar*/
+.medical-search {
+    width: 100%;
+    max-width: 500px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #fff;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    width: 100%; /* Set width to 100% for responsiveness */
-    height: auto; /* Height will adjust based on content */
-}
-
-/* Username Styling */
-.username {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-/* Buttons (Edit & Delete) */
-.edit-btn, .delete-btn {
-    padding: 5px 10px;
-    font-size: 14px;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
-
-.edit-btn {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.edit-btn:hover {
-    background-color: #45a049;
-}
-
-.delete-btn {
-    background-color: #f44336;
-    color: white;
-}
-
-.delete-btn:hover {
-    background-color: #e53935;
-}
-
-/* Add User Section */
-.add-user {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
     justify-content: center;
+    margin-bottom: 20px;
 }
 
-.add-user input {
-    padding: 5px 10px;
-    font-size: 14px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
-.add-user button {
-    padding: 6px 12px;
-    background-color: #4CAF50;
+.add-record {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #7096D1;
     color: white;
-    font-size: 14px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    text-decoration: none;
+    border-radius: 20px;
+    float: right;
+    margin-bottom: 25px;
 }
 
-.add-user button:hover {
-    background-color: #45a049;
+
+.add-record:hover {
+    background-color: #0056b3;
 }

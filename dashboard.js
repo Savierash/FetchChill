@@ -109,138 +109,65 @@ function updateStatus(button, newStatus) {
     }
 }
 
+ // Function to update appointment status
+ function updateStatus(button, status) {
+    const row = button.closest('tr');
+    const statusCell = row.querySelector('.status');
+    statusCell.textContent = status;
+    row.setAttribute('data-status', status.toLowerCase());
+}
 
-// Medical Records
-document.getElementById("medicalForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-
-    // Get values from the form
-    let owner = document.getElementById("owner").value;
-    let pet = document.getElementById("pet").value;
-    let breed = document.getElementById("breed").value;
-    let weight = document.getElementById("weight").value;
-    let age = document.getElementById("age").value;
-    let gender = document.getElementById("gender").value;
-    let date = document.getElementById("date").value;
-    let diagnosis = document.getElementById("diagnosis").value;
-    let treatment = document.getElementById("treatment").value;
-
-    // Insert new record into the table
-    let table = document.getElementById("recordsTable");
-    let row = table.insertRow();
-
-    // Insert cells into the new row
-    row.insertCell(0).innerText = owner;
-    row.insertCell(1).innerText = pet;
-    row.insertCell(2).innerText = breed;
-    row.insertCell(3).innerText = weight;
-    row.insertCell(4).innerText = age;
-    row.insertCell(5).innerText = gender;
-    row.insertCell(6).innerText = date;
-    row.insertCell(7).innerText = diagnosis;
-    row.insertCell(8).innerText = treatment;
-
-    // Reset the form
-    document.getElementById("medicalForm").reset();
-
-    // Send the data to PHP using Fetch API (POST request)
-    const petData = {
-        ownername: owner,
-        petname: pet,
-        breed: breed,
-        weight: weight,
-        age: age,
-        gender: gender,
-        visitdate: date,
-        diagnosis: diagnosis,
-        treatment: treatment
-    };
-
-    fetch('petrecords.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(petData),
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message); // Show success message
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-});
-
-
-
-//USER MANAGEMENT
-// Assuming users array is initialized somewhere in the code
-let users = [];  // If you haven't defined this, initialize it
-
-// Function to render the user list
-function renderUserList() {
-    const userListDiv = document.getElementById('userList');
-    userListDiv.innerHTML = ''; // Clear existing list
-
-    if (users.length === 0) {
-        userListDiv.innerHTML = 'No users available.'; // Optional message if no users exist
-    }
-
-    users.forEach((user, index) => {
-        const userItem = document.createElement('div');
-        userItem.classList.add('user-item');
-
-        const username = document.createElement('span');
-        username.classList.add('username');
-        username.textContent = user;
-
-        const editBtn = document.createElement('button');
-        editBtn.classList.add('edit-btn');
-        editBtn.textContent = 'Edit';
-        editBtn.onclick = () => editUser(index);
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.classList.add('delete-btn');
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.onclick = () => deleteUser(index);
-
-        userItem.appendChild(username);
-        userItem.appendChild(editBtn);
-        userItem.appendChild(deleteBtn);
-        userListDiv.appendChild(userItem);
+// Function to filter appointments based on status
+function filterAppointments(status) {
+    const rows = document.querySelectorAll('#appointment-list tr');
+    rows.forEach(row => {
+        if (status === 'all' || row.getAttribute('data-status') === status) {
+            row.style.display = ''; // Show the row
+        } else {
+            row.style.display = 'none'; // Hide the row
+        }
     });
 }
 
-// Function to add a new user
-document.getElementById('addUserBtn').onclick = function() {
-    const newUserName = document.getElementById('newUserName').value.trim();
+// Search function for Appointments
+function searchAppointments() {
+    const query = document.getElementById("search-bar").value.toLowerCase();
+    const rows = document.querySelectorAll("#appointment-list tr");
     
-    if (newUserName && !users.includes(newUserName)) { // Check for empty or duplicate username
-        users.push(newUserName); // Add the new user to the list
-        renderUserList(); // Re-render the user list
-        document.getElementById('newUserName').value = ''; // Clear input field
-    } else {
-        alert('Please enter a valid, unique username.'); // Optional alert for invalid input
-    }
-};
-
-// Function to delete a user
-function deleteUser(index) {
-    if (index >= 0 && index < users.length) {
-        users.splice(index, 1); // Remove the user from the array
-        renderUserList(); // Re-render the user list
-    }
+    rows.forEach(row => {
+        const customerName = row.querySelector(".customer-name").textContent.toLowerCase();
+        if (customerName.includes(query)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
 }
 
-// Function to edit a user
-function editUser(index) {
-    const newUserName = prompt('Edit username:', users[index]);
-    if (newUserName && newUserName !== users[index]) { // Check if the new name is different
-        users[index] = newUserName; // Update the user name
-        renderUserList(); // Re-render the user list
-    }
-}
+//Medical Records pop up
 
-// Initial render of user list
-renderUserList();
+
+//Medical records data
+ // Retrieve form data from localStorage
+ const formData = JSON.parse(localStorage.getItem('medicalRecord'));
+
+ if (formData) {
+     // Create a new row for the table
+     const tableRow = document.createElement('tr');
+     
+     // Insert data into each table cell
+     tableRow.innerHTML = `
+         <td>${formData.ownerName}</td>
+         <td>${formData.petName}</td>
+         <td>${formData.weight}</td>
+         <td>${formData.age}</td>
+         <td>${formData.gender}</td>
+         <td>${formData.checkupDate}</td>
+         <td>${formData.time}</td>
+         <td>${formData.diagnosis}</td>
+         <td>${formData.treatment}</td>
+     `;
+     
+     // Append the row to the table body
+     document.getElementById('tableBody').appendChild(tableRow);
+ }

@@ -1,11 +1,3 @@
-<?php
-session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -101,87 +93,99 @@ if (!isset($_SESSION['username'])) {
     </div>
 
 
-        <!-- Appointments -->
+    <!-- Appointments -->
         <div id="appointments" class="appointment-container" style="display:none;">
-            <h1>Appointments</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>APPOINTMENT DATE</th>
-                        <th>CUSTOMERS</th>
-                        <th>SERVICE</th>
-                        <th>STATUS</th>
-                        <th>ACTION</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>2025-10-03 10:00 AM</td>
-                        <td>Juan Dela Cruz</td>
-                        <td>Grooming</td>
-                        <td class="status">Pending</td>
-                        <td class="buttons">
-                            <button class="confirm" onclick="updateStatus(this, 'Confirmed')">Confirm</button>
-                            <button class="pending" onclick="updateStatus(this, 'Pending')">Pending</button>
-                            <button class="cancel" onclick="updateStatus(this, 'Cancelled')">Cancel</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <!-- Search Bar -->
+        <div class="appointment-search">
+            <div class="search-container">
+                <i class='bx bx-search'></i>
+                <input type="text" id="search-bar" placeholder="Search your appointment..." onkeyup="searchAppointments()">
+            </div>
         </div>
+
+
+        <h1>Appointments</h1>
+
+        <div class="appointment-filter">
+        <button onclick="filterAppointments('all')">All Appointments</button>
+        <button onclick="filterAppointments('confirmed')">Confirmed</button>
+        <button onclick="filterAppointments('pending')">Pending</button>
+        <button onclick="filterAppointments('cancelled')">Cancelled</button>
+
+    </div>
+        <table>
+            <thead>
+                <tr>
+                    <th class="tableh">APPOINTMENT DATE</th>
+                    <th class="tableh">CUSTOMERS</th>
+                    <th class="tableh">SERVICE</th>
+                    <th class="tableh">STATUS</th>
+                    <th class="tableh">ACTION</th>
+                </tr>
+            </thead>
+            <tbody id="appointment-list">
+                <tr data-status="pending">
+                    <td>2025-10-03 10:00 AM</td>
+                    <td>Juan Dela Cruz</td>
+                    <td>Grooming</td>
+                    <td class="status">Pending</td>
+                    <td class="buttons">
+                        <button class="confirm" onclick="updateStatus(this, 'Confirmed')">Confirm</button>
+                        <button class="pending" onclick="updateStatus(this, 'Pending')">Pending</button>
+                        <button class="cancel" onclick="updateStatus(this, 'Cancelled')">Cancel</button>
+                    </td>
+                </tr>
+            <!-- another row for many appoinment -->
+         </tbody>
+        </table>
+    </div>
 
         <!-- Medical Records -->
         <div id="medicalRecords" class="medical-container" style="display:none;">
-            <h1>Medical Records</h1>
-            <table class="table-med">
-            <thead>
-              <tr>
-                <th class="thead">Owner Name</th>
-                <th class="thead">Pet Name</th>
-                <th class="thead">Breed</th>
-                <th class="thead">Weight (kg)</th>
-                <th class="thead">Age</th>
-                <th class="thead">Gender</th>
-                <th class="thead">Date of Check-up</th>
-                <th class="thead">Diagnosis</th>
-                <th class="thead">Treatment</th>
-              </tr>
-            </thead>
 
-                <tbody id="recordsTable">
-                    <!-- Records will be inserted here dynamically -->
-                </tbody>
-            </table>
+        <!-- Search Bar -->
+        <div class="medical-search">
+            <div class="search-container">
+                <i class='bx bx-search'></i>
+                <input type="text" id="search-bar" placeholder="Search your appointment..." onkeyup="searchAppointments()">
+            </div>
+        </div>
+            <h1>Pet Records</h1>
+            <button id="popupButton" class="add-record">Add Medical Record</button>
+            
+            
 
-            <h2>Add Medical Record</h2>
             <form class="med-form" id="medicalForm">
-                <input class="med-input" type="text" id="owner" placeholder="Owner Name" required>
-                <input class="med-input" type="text" id="pet" placeholder="Pet Name" required>
-                <input class="med-input" type="text" id="breed" placeholder="Breed" required>
-                <input class="med-input" type="number" id="weight" placeholder="Weight (kg)" required>
-                <input class="med-input" type="number" id="age" placeholder="Age" required>
-                <input class="med-input" type="text" id="gender" placeholder="Gender" required>
-                <input class="med-input" type="date" id="date" required>
-                <input class="med-input" type="text" id="diagnosis" placeholder="Diagnosis" required>
-                <input class="med-input" type="text" id="treatment" placeholder="Treatment" required>
-                <button class="btn-medical" type="submit">Add Record</button>
-            </form>
-        </div>
+                <table border="1">
+                    <thead>
+                <tr>
+                    <th>Owner Name</th>
+                    <th>Pet Name</th>
+                    <th>Weight (kg)</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Date of Check-Up</th>
+                    <th>Time</th>
+                    <th>Diagnosis</th>
+                    <th>Treatment</th>
+                </tr>
+            </thead>
+             <tbody>
+            <!-- Data rows can go here -->
+            <tr>
+                <td>John Doe</td>
+                <td>Buddy</td>
+                <td>5.2</td>
+                <td>3</td>
+                <td>Male</td>
+                <td>2025-03-04</td>
+                <td>10:00 AM</td>
+                <td>Fever</td>
+                <td>Medication</td>
+            </tr>
+        </tbody>
+    </table>
 
-        <!-- User Management -->
-        <div id="userManagement" class="management-container" style="display:none;">
-            <h1>User Management</h1>
-  
-            <div class="user-list" id="userList">
-        <!-- User list will appear here -->
-        </div>
-
-        <!-- Add User Form -->
-        <div class="add-user">
-            <input type="text" id="newUserName" placeholder="Enter new user name" />
-            <button id="addUserBtn">Add User</button>
-    </div>
-    </div>
 
 <script src="dashboard.js"></script>
 </body>
