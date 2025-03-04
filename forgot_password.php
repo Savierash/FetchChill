@@ -1,6 +1,6 @@
 <?php
 // Include the database connection
-require_once 'db_connection.php'; // Ensure the path is correct
+require_once 'db_connection.php'; 
 
 session_start();
 
@@ -11,34 +11,29 @@ function showError($message) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
 
-    // Basic validation
     if (empty($email)) {
-        $error_message = showError("Please enter your email.");
+        $error_message = showError("Please enter the admin's email.");
     } else {
-        // Query to check if email exists in the database
-        $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+        
+        $stmt = $conn->prepare("SELECT * FROM admin WHERE email = ?"); 
         $stmt->bind_param('s', $email); // 's' for string
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
-            // Email exists, process password reset logic here
-            // You might want to generate a token, send an email, etc.
-            // For example:
-            $user = $result->fetch_assoc();
-            $token = bin2hex(random_bytes(50)); // Generate a random token
+           
+            $admin = $result->fetch_assoc(); 
+            $token = bin2hex(random_bytes(50));
 
-            // Save the token in the database for password reset (you need a 'reset_token' column in the table)
-            $stmt = $conn->prepare("UPDATE users SET reset_token = ? WHERE email = ?");
+            
+            $stmt = $conn->prepare("UPDATE admin SET reset_token = ? WHERE email = ?"); 
             $stmt->bind_param('ss', $token, $email);
             $stmt->execute();
 
-            // You can then send an email to the user with the reset link containing the token.
-            // For now, just echo the token for testing.
-            echo "Password reset token: $token"; // Remove this after testing
+            echo "Password reset token for admin: $token"; // Remove this after testing
 
         } else {
-            $error_message = showError("Email not found.");
+            $error_message = showError("Admin email not found.");
         }
 
         // Close the statement
@@ -49,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 // Close the connection
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
