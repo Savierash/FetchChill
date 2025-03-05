@@ -1,22 +1,18 @@
-//SIDEBAR FUNCTION
-function changeContent(contentId) {
-    // Hide all sections first
-    const sections = document.querySelectorAll('.content-section, .appointment-container, .medical-container, .management-container');
-    sections.forEach(section => {
-        section.style.display = 'none';
-    });
+////////////////////SIDEBAR FUNCTION
+function changeContent(section) {
+    
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('appointments').style.display = 'none';
+    document.getElementById('medicalRecords').style.display = 'none';
+    document.getElementById('userManagement').style.display = 'none';
 
-    // Show the selected section
-    const contentToShow = document.getElementById(contentId);
-    if (contentToShow) {
-        contentToShow.style.display = 'block';
-    }
+    document.getElementById(section).style.display = 'block';
 }
 
 
 
 
-//for notification bells
+///////////////////////////for notification bells
 function toggleDropdown() {
     var dropdown = document.getElementById("notifDropdown");
     dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
@@ -70,7 +66,7 @@ function markAsRead(element) {
 }
 
 
-//DASHBOARD
+//////////////////////////DASHBOARD
 
 async function fetchDashboardData() {
     try {
@@ -91,7 +87,7 @@ document.addEventListener("DOMContentLoaded", fetchDashboardData);
 setInterval(fetchDashboardData, 5000);
 
 
-//APPOINTMENT
+///////////////////////////APPOINTMENT
 function updateStatus(button, newStatus) {
     let row = button.closest("tr");
     let statusCell = row.querySelector(".status");
@@ -141,7 +137,7 @@ function searchAppointments() {
     });
 }
 
-//Medical Records pop up
+//////////////////Medical Records pop up
 function openPopup() {
     document.querySelector('.popup-container').style.display = 'flex';
 }
@@ -239,7 +235,12 @@ window.onload = function() {
         
         var successMessage = document.getElementById("successMessage");
         if (successMessage) {
-            successMessage.style.display = "none";
+            successMessage.style.display = "flex";
         }
     }, 10000); 
 }
+
+
+
+
+//////////////////////////USER MANAGEMENT

@@ -69,17 +69,17 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fetch & Chill</title>
     
-    <!-- Google Fonts -->
+    <!------------------ Google Fonts ---------------------->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="dashboard.css">
 
-    <!-- Icons -->
+    <!-------------------------------- Icons ------------------------>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
 
-<!-- Sidebar -->
+<!---------------------------- Sidebar ------------------------->
 <div class="container">
     <div class="sidebar">
         <div class="logo">
@@ -96,14 +96,14 @@ $conn->close();
         </ul>
     </div>
 
-    <!-- Main Content -->
+    <!-------------------------- Main Content ------------------------------>
     <div class="content">
         <div class="notification-bell" onclick="toggleDropdown()">
             <i class='bx bxs-bell'></i>
             <span class="badge" id="notifCount">3</span> 
         </div>
 
-    <!-- Notification Dropdown -->
+    <!-------------------------- Notification Dropdown--------------------->
     <div id="notifDropdown" class="notification-dropdown">
         <div class="notification-header">
             <span>Notifications</span>
@@ -121,7 +121,7 @@ $conn->close();
         </div>
     </div>
 
-        <!-- Dashboard -->
+        <!------------------------ Dashboard -------------------------->
         <div id="dashboard" class="content-section">
             <h1>Dashboard</h1>
                 <div class="box-container">
@@ -157,9 +157,9 @@ $conn->close();
     </div>
 
 
-    <!-- Appointments -->
+    <!----------------------------Appointments------------------------->
         <div id="appointments" class="appointment-container" style="display:none;">
-    <!-- Search Bar -->
+    <!---------------------Search Bar------------------------------------>
         <div class="appointment-search">
             <div class="search-container">
                 <i class='bx bx-search'></i>
@@ -204,10 +204,10 @@ $conn->close();
         </table>
     </div>
 
-        <!-- Medical Records -->
+<!------------------------------Medical Records------------------------------------->
         <div id="medicalRecords" class="medical-container" style="display:none;">
 
-        <!-- Search Bar -->
+        <!--------------------Search Bar--------------------->
         <div class="medical-search">
             <div class="search-container">
                 <i class='bx bx-search'></i>
@@ -218,14 +218,14 @@ $conn->close();
 
     
 
-<!-- Trigger Button -->
+<!------------------------------------Trigger Button----------------------------->
 <button class="add-record" onclick="openPopup()">Add Medical Record</button>
 
-<!-- Full-Screen Popup (Hidden by default) -->
+
 <div id="popupForm" class="popup-container" style="display: none;">
     <div class="popup-content">
         <button class="close-btn" onclick="closePopup()">&times;</button>
-        <h2>Add Medical Record</h2>
+        <h2>Add Client Record</h2>
         <form action="dashboard.php" class="medic-form" id="medicalForm" method="POST">
             <label for="ownerName">Owner Name:</label>
             <input type="text" id="ownerName" name="ownerName" required>
@@ -265,7 +265,7 @@ $conn->close();
     </div>
 </div>
 
-<!-- Table to Display Records -->
+<!---------------------------- Table Display Records ---------------------------->
 <div class="med-form">
     <table border="1">
         <thead>
@@ -284,7 +284,7 @@ $conn->close();
         </thead>
         <tbody id="tableBody">
         <?php
-            // Loop through records and display each one in a table row
+           
             if (!empty($records)) {
                 foreach ($records as $record) {
                     echo "<tr>";
@@ -306,6 +306,13 @@ $conn->close();
             ?>
         </tbody>
     </table>
+</div>
+
+
+<!------------------------User Management----------------------------->
+<div id="userManagement" class="management-container" style="display:none;">
+    
+          
 </div>
 
 

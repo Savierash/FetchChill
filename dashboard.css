@@ -13,6 +13,16 @@ body {
     background: #E7F1FF;
 }
 
+
+#appointments,
+#medicalRecords{
+    display: none;
+}
+
+.active-section {
+    display: block !important;
+}
+
 /* DASHBOARD CODE */
 .container {
     display: flex;
@@ -578,7 +588,7 @@ th {
     background: white;
     padding: 20px;
     border-radius: 10px;
-    width: 300px;
+    width: 500px;
     max-width: 90%;
 }
 
@@ -648,18 +658,6 @@ th {
     background-size: 12px;
 }
 
-.medic-form button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #0056b3; 
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
 .medic-form button:hover {
     background-color: #004080; 
 }
@@ -667,7 +665,7 @@ th {
 .medic-form button {
     margin-top: 20px;
     padding: 10px 20px;
-    background: #007BFF;
+    background: #7096D1;
     color: white;
     border: none;
     border-radius: 5px;
