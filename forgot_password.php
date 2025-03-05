@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->bind_param('ss', $token, $email);
             $stmt->execute();
 
-            echo "Password reset token for admin: $token"; // Remove this after testing
+            echo "Password reset token for admin: $token"; 
 
         } else {
             $error_message = showError("Admin email not found.");

@@ -1,6 +1,5 @@
 <?php
 require_once 'db_connection.php'; 
-
 session_start();
 
 function showError($message) {
@@ -9,42 +8,42 @@ function showError($message) {
 
 $error_message = '';  
 
-// Default admin credentials
-$default_username = 'admin123';
-$default_password = 'admin123';  
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-$stmt = $conn->prepare("SELECT * FROM admin WHERE username = ? LIMIT 1");
-$stmt->bind_param("s", $default_username);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-    $admin = $result->fetch_assoc();
-    
-    if ($admin['password'] == $default_password) {
-        $_SESSION['username'] = $admin['username'];
-        $_SESSION['role'] = 'admin'; 
-        
-        
-        header("Location: homepage.php");
-        exit();
-    } else {
-        $error_message = showError("Incorrect password for the default admin.");
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
     }
-} else {
-    $error_message = showError("No admin account found in the database.");
+
+    $stmt = $conn->prepare("SELECT * FROM admin WHERE username = ? LIMIT 1");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $admin = $result->fetch_assoc();
+
+        if ($admin['password'] === $password) { 
+            $_SESSION['username'] = $admin['username'];
+            $_SESSION['role'] = 'admin'; 
+            
+            header("Location: homepage.php");
+            exit();
+        } else {
+            $error_message = showError("Incorrect password.");
+        }
+    } else {
+        $error_message = showError("No such admin account.");
+    }
+
+    $stmt->close();
+    $conn->close();
 }
 
-$stmt->close();
-$conn->close();
-
-echo $error_message; 
+echo $error_message;
 ?>
+
 
 
 

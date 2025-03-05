@@ -71,13 +71,12 @@ function markAsRead(element) {
 
 
 //DASHBOARD
-// Function para kunin ang data mula sa API
+
 async function fetchDashboardData() {
     try {
-        const response = await fetch('https://example.com/api/dashboard'); // Palitan ito ng totoong API endpoint
+        const response = await fetch('https://example.com/api/dashboard'); 
         const data = await response.json();
 
-        // I-update ang UI gamit ang nakuha na data
         document.getElementById('services-count').textContent = data.services;
         document.getElementById('confirmed-count').textContent = data.confirmed;
         document.getElementById('pending-count').textContent = data.pending;
@@ -87,10 +86,8 @@ async function fetchDashboardData() {
     }
 }
 
-// Tawagin ang function pag-load ng page
-document.addEventListener("DOMContentLoaded", fetchDashboardData);
 
-// I-refresh ang data kada 5 segundo (5000ms) para real-time update
+document.addEventListener("DOMContentLoaded", fetchDashboardData);
 setInterval(fetchDashboardData, 5000);
 
 
@@ -122,9 +119,9 @@ function filterAppointments(status) {
     const rows = document.querySelectorAll('#appointment-list tr');
     rows.forEach(row => {
         if (status === 'all' || row.getAttribute('data-status') === status) {
-            row.style.display = ''; // Show the row
+            row.style.display = ''; 
         } else {
-            row.style.display = 'none'; // Hide the row
+            row.style.display = 'none'; 
         }
     });
 }
@@ -145,29 +142,104 @@ function searchAppointments() {
 }
 
 //Medical Records pop up
+function openPopup() {
+    document.querySelector('.popup-container').style.display = 'flex';
+}
+
+function closePopup() {
+    document.querySelector('.popup-container').style.display = 'none';
+}
+
+document.querySelector('.open-popup-button').addEventListener('click', openPopup);
+document.querySelector('.close-btn').addEventListener('click', closePopup);
 
 
-//Medical records data
- // Retrieve form data from localStorage
- const formData = JSON.parse(localStorage.getItem('medicalRecord'));
+ /////////////////////////// Submit button medical records
+document.getElementById('medicalForm').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+    
+    let formData = new FormData(document.getElementById('medicalForm'));
 
- if (formData) {
-     // Create a new row for the table
-     const tableRow = document.createElement('tr');
-     
-     // Insert data into each table cell
-     tableRow.innerHTML = `
-         <td>${formData.ownerName}</td>
-         <td>${formData.petName}</td>
-         <td>${formData.weight}</td>
-         <td>${formData.age}</td>
-         <td>${formData.gender}</td>
-         <td>${formData.checkupDate}</td>
-         <td>${formData.time}</td>
-         <td>${formData.diagnosis}</td>
-         <td>${formData.treatment}</td>
-     `;
-     
-     // Append the row to the table body
-     document.getElementById('tableBody').appendChild(tableRow);
- }
+    fetch('dashboard.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())  
+    .then(data => {
+        console.log(data);  
+        
+        document.getElementById('popupForm').style.display = 'none';
+        document.getElementById('medicalRecords').style.display = 'block';
+        
+        location.reload(); 
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+});
+
+
+ //////////////////// Database pet records
+ document.getElementById("medicalForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    let formData = new FormData(this);
+
+    fetch("dashboard.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        loadRecords(); 
+        this.reset(); 
+    })
+    .catch(error => console.error("Error:", error));
+});
+
+
+function loadRecords() {
+    fetch("dashboard.php")
+    .then(response => response.json())
+    .then(data => {
+        let tableBody = document.getElementById("tableBody");
+        tableBody.innerHTML = ""; 
+
+        if (data.message) {
+            tableBody.innerHTML = "<tr><td colspan='10'>No records found.</td></tr>";
+        } else {
+            data.forEach(record => {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td>${record.ownername}</td>
+                        <td>${record.petname}</td>
+                        <td>${record.breed}</td>
+                        <td>${record.weight}</td>
+                        <td>${record.age}</td>
+                        <td>${record.gender}</td>
+                        <td>${record.visitdate}</td>
+                        <td>${record.time}</td>
+                        <td>${record.diagnosis}</td>
+                        <td>${record.treatment}</td>
+                    </tr>
+                `;
+            });
+        }
+    })
+    .catch(error => console.error("Error:", error));
+}
+
+loadRecords();
+
+
+//timer for success meassage
+window.onload = function() {
+    setTimeout(function() {
+        
+        var successMessage = document.getElementById("successMessage");
+        if (successMessage) {
+            successMessage.style.display = "none";
+        }
+    }, 10000); 
+}

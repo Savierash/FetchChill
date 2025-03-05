@@ -1,3 +1,67 @@
+<?php
+session_start();  
+
+include 'pet_connection.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+   
+    $ownername = $_POST['ownerName'] ?? null;
+    $petname = $_POST['petName'] ?? null;
+    $breed = $_POST['breed'] ?? null;
+    $weight = $_POST['weight'] ?? null;
+    $age = $_POST['age'] ?? null;
+    $gender = $_POST['gender'] ?? null;
+    $visitdate = $_POST['checkupDate'] ?? null;
+    $time = $_POST['time'] ?? null;
+    $diagnosis = $_POST['diagnosis'] ?? null;
+    $treatment = $_POST['treatment'] ?? null;
+
+    
+    if (!$ownername || !$petname || !$breed || !$weight || !$age || !$gender || !$visitdate || !$time || !$diagnosis || !$treatment) {
+        echo "<div style='background-color: red; color: white; padding: 10px; text-align: center;'>
+                Error: Missing required fields!
+              </div>";
+        exit();
+    }
+
+    $sql = "INSERT INTO petrecords (ownername, petname, breed, weight, age, gender, visitdate, time, diagnosis, treatment) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssiiissss", $ownername, $petname, $breed, $weight, $age, $gender, $visitdate, $time, $diagnosis, $treatment);
+
+    if ($stmt->execute()) {
+        $_SESSION['success_message'] = "Record added successfully!";
+        header("Location: dashboard.php");  
+        exit();
+    } else {
+        echo "<div style='background-color: red; color: white; padding: 10px; text-align: center;'>
+                Error adding record!
+              </div>";
+    }
+    $stmt->close();
+}
+
+
+if (isset($_SESSION['success_message'])) {
+    echo "<div id='successMessage' style='background-color: #4CAF50; color: white; padding: 10px; text-align: center;'>
+            {$_SESSION['success_message']}
+          </div>";
+    unset($_SESSION['success_message']);  
+}
+
+$sql = "SELECT * FROM petrecords";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    
+    $records = $result->fetch_all(MYSQLI_ASSOC);
+} else {
+    $records = [];
+}
+$conn->close();
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -151,40 +215,98 @@
             </div>
         </div>
             <h1>Pet Records</h1>
-            <button id="popupButton" class="add-record">Add Medical Record</button>
-            
-            
 
-            <form class="med-form" id="medicalForm">
-                <table border="1">
-                    <thead>
-                <tr>
-                    <th>Owner Name</th>
-                    <th>Pet Name</th>
-                    <th>Weight (kg)</th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Date of Check-Up</th>
-                    <th>Time</th>
-                    <th>Diagnosis</th>
-                    <th>Treatment</th>
-                </tr>
-            </thead>
-             <tbody>
-            <!-- Data rows can go here -->
+    
+
+<!-- Trigger Button -->
+<button class="add-record" onclick="openPopup()">Add Medical Record</button>
+
+<!-- Full-Screen Popup (Hidden by default) -->
+<div id="popupForm" class="popup-container" style="display: none;">
+    <div class="popup-content">
+        <button class="close-btn" onclick="closePopup()">&times;</button>
+        <h2>Add Medical Record</h2>
+        <form action="dashboard.php" class="medic-form" id="medicalForm" method="POST">
+            <label for="ownerName">Owner Name:</label>
+            <input type="text" id="ownerName" name="ownerName" required>
+
+            <label for="petName">Pet Name:</label>
+            <input type="text" id="petName" name="petName" required>
+
+            <label for="breed">Breed:</label>
+            <input type="text" id="breed" name="breed" required>
+
+            <label for="weight">Weight (kg):</label>
+            <input type="number" id="weight" name="weight" required>
+
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+
+            <label for="checkupDate">Date of Check-Up:</label>
+            <input type="date" id="checkupDate" name="checkupDate" required>
+
+            <label for="time">Time:</label>
+            <input type="time" id="time" name="time" required>
+
+            <label for="diagnosis">Diagnosis:</label>
+            <input type="text" id="diagnosis" name="diagnosis" required>
+
+            <label for="treatment">Treatment:</label>
+            <input type="text" id="treatment" name="treatment" required>
+
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<!-- Table to Display Records -->
+<div class="med-form">
+    <table border="1">
+        <thead>
             <tr>
-                <td>John Doe</td>
-                <td>Buddy</td>
-                <td>5.2</td>
-                <td>3</td>
-                <td>Male</td>
-                <td>2025-03-04</td>
-                <td>10:00 AM</td>
-                <td>Fever</td>
-                <td>Medication</td>
+                <th>Owner Name</th>
+                <th>Pet Name</th>
+                <th>Breed</th>
+                <th>Weight (kg)</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Date of Check-Up</th>
+                <th>Time</th>
+                <th>Diagnosis</th>
+                <th>Treatment</th>
             </tr>
+        </thead>
+        <tbody id="tableBody">
+        <?php
+            // Loop through records and display each one in a table row
+            if (!empty($records)) {
+                foreach ($records as $record) {
+                    echo "<tr>";
+                    echo "<td>{$record['ownername']}</td>";
+                    echo "<td>{$record['petname']}</td>";
+                    echo "<td>{$record['breed']}</td>";
+                    echo "<td>{$record['weight']}</td>";
+                    echo "<td>{$record['age']}</td>";
+                    echo "<td>{$record['gender']}</td>";
+                    echo "<td>{$record['visitdate']}</td>";
+                    echo "<td>{$record['time']}</td>";
+                    echo "<td>{$record['diagnosis']}</td>";
+                    echo "<td>{$record['treatment']}</td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='10' style='text-align: center;'>No records found.</td></tr>";
+            }
+            ?>
         </tbody>
     </table>
+</div>
 
 
 <script src="dashboard.js"></script>
