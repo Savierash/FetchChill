@@ -1,13 +1,17 @@
 ////////////////////SIDEBAR FUNCTION
-function changeContent(section) {
-    
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('appointments').style.display = 'none';
-    document.getElementById('medicalRecords').style.display = 'none';
-    document.getElementById('userManagement').style.display = 'none';
+function changeContent(sectionId) {
+    document.querySelectorAll('.content-section, .appointment-container, .medical-container, .management-container').forEach(section => {
+        section.style.display = 'none';
+    });
 
-    document.getElementById(section).style.display = 'block';
+    const selectedSection = document.getElementById(sectionId);
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    } else {
+        console.error("Section not found: " + sectionId);
+    }
 }
+
 
 
 
@@ -244,3 +248,14 @@ window.onload = function() {
 
 
 //////////////////////////USER MANAGEMENT
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".view-button").forEach(button => {
+        button.addEventListener("click", function () {
+            let recordId = this.getAttribute("data-id");
+            window.location.href = "view_record.php?id=" + recordId;
+        });
+    });
+});
+
+
+

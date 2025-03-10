@@ -156,6 +156,7 @@ $conn->close();
         </div>
     </div>
 
+    
 
     <!----------------------------Appointments------------------------->
         <div id="appointments" class="appointment-container" style="display:none;">
@@ -199,13 +200,15 @@ $conn->close();
                         <button class="cancel" onclick="updateStatus(this, 'Cancelled')">Cancel</button>
                     </td>
                 </tr>
-            <!-- another row for many appoinment -->
          </tbody>
         </table>
     </div>
 
+    
+
+    
 <!------------------------------Medical Records------------------------------------->
-        <div id="medicalRecords" class="medical-container" style="display:none;">
+    <div id="medicalRecords" class="medical-container" style="display:none;">
 
         <!--------------------Search Bar--------------------->
         <div class="medical-search">
@@ -266,55 +269,74 @@ $conn->close();
 </div>
 
 <!---------------------------- Table Display Records ---------------------------->
-<div class="med-form">
-    <table border="1">
-        <thead>
+<table class="med-form">
+    <thead>
+        <tr>
+            <th>Owner Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (!empty($records)): ?>
+            <?php foreach ($records as $record): ?>
+                <tr>
+                    <td><?php echo isset($record['ownername']) ? htmlspecialchars($record['ownername']) : 'N/A'; ?></td>
+                    <td>
+                        <a href="view_record.php?ownername=<?php echo isset($record['ownername']) ? urlencode($record['ownername']) : ''; ?>">
+                            <button class="view-button">View</button>
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
             <tr>
-                <th>Owner Name</th>
-                <th>Pet Name</th>
-                <th>Breed</th>
-                <th>Weight (kg)</th>
-                <th>Age</th>
-                <th>Gender</th>
-                <th>Date of Check-Up</th>
-                <th>Time</th>
-                <th>Diagnosis</th>
-                <th>Treatment</th>
+                <td colspan="2" style="text-align: center;">No records found</td>
             </tr>
-        </thead>
-        <tbody id="tableBody">
-        <?php
-           
-            if (!empty($records)) {
-                foreach ($records as $record) {
-                    echo "<tr>";
-                    echo "<td>{$record['ownername']}</td>";
-                    echo "<td>{$record['petname']}</td>";
-                    echo "<td>{$record['breed']}</td>";
-                    echo "<td>{$record['weight']}</td>";
-                    echo "<td>{$record['age']}</td>";
-                    echo "<td>{$record['gender']}</td>";
-                    echo "<td>{$record['visitdate']}</td>";
-                    echo "<td>{$record['time']}</td>";
-                    echo "<td>{$record['diagnosis']}</td>";
-                    echo "<td>{$record['treatment']}</td>";
-                    echo "</tr>";
-                }
-            } else {
-                echo "<tr><td colspan='10' style='text-align: center;'>No records found.</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-</div>
+        <?php endif; ?>
+    </tbody>
+</table>
+
+
+
+
+
 
 
 <!------------------------User Management----------------------------->
 <div id="userManagement" class="management-container" style="display:none;">
-    
-          
-</div>
+    <h1>User Management</h1>
 
+    <!--------------------- Container 1: Profile Section ------------------------->
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-picture">
+                <img src="img/default-profile.png" alt="Profile Picture">
+            </div>
+            <div class="profile-info">
+                <h2><?php echo htmlspecialchars($user['username'] ?? 'Unknown'); ?></h2>
+                <p class="role"><?php echo htmlspecialchars($user['role'] ?? 'User'); ?></p>
+            </div>
+        </div>
+    </div>
+
+    <!--------------------- Container 2: Personal Information ------------------------->
+    <div class="personal-info-container">
+        <h2>Personal Information</h2>
+        <div class="info-section">
+            <div class="info-item">
+                <label>Username:</label>
+                <span>johndoe123</span>
+            </div>
+            <div class="info-item">
+                <label>Email:</label>
+                <span>johndoe@example.com</span>
+            </div>
+            <div class="info-item">
+                <label>User Role:</label>
+                <span>Admin</span>
+            </div>
+        </div>
+    </div>
 
 <script src="dashboard.js"></script>
 </body>
