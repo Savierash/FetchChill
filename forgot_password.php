@@ -59,6 +59,12 @@ $conn->close();
 <div class="container">
     <div class="signin-signup">
         <div class="classleft">
+
+        <!-- Back Button -->
+        <button class="back-btn" onclick="history.back()">
+            <i class='bx bx-arrow-back'></i>
+        </button>
+
             <form action="forgot_password.php" method="POST" class="forgot-password-form">
                 <h2 class="title">Forgot Password</h2>
 
@@ -72,9 +78,6 @@ $conn->close();
 
                 <input type="submit" value="Reset Password" class="btn solid" />
 
-                <div class="back-to-login">
-                    <a href="index.php">Back to Login</a>
-                </div>
             </form>
         </div>
 

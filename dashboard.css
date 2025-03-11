@@ -225,6 +225,22 @@ body {
     gap: 30px;
     justify-content: center;
     margin: auto;
+    flex-wrap: wrap; 
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .box-container {
+        gap: 20px; 
+    }
+}
+
+@media (max-width: 480px) {
+    .box-container {
+        gap: 10px;
+        flex-direction: column; 
+        align-items: center; 
+    }
 }
 
 .content-box {
@@ -266,8 +282,31 @@ body {
     color: #000;
 }
 
+/*GRAPH*/
+.content-graph {
+    display: block;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+    width: 300px;  
+    height: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+}
 
-/* RESPONSIVE STYLES */
+.content-graph:hover {
+    background: #f0f0f0;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* RESPONSIVE STYLES DASHBOARD*/
 @media screen and (max-width: 768px) {
     .container {
         flex-direction: column;
@@ -658,6 +697,9 @@ th {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto; 
 }
 
 .medic-form button:hover {
@@ -761,17 +803,43 @@ th {
     background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
+    overflow-y: auto; 
 }
 
 .popup-content {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 300px;
-    text-align: center;
+    width: 90%; 
+    max-width: 300px;
+    margin: 20px auto; 
+    max-height: 80vh; 
+    overflow-y: auto; 
 }
 
 .close-btn {
     float: right;
     cursor: pointer;
+}
+
+
+@media (min-width: 600px) {
+    .popup-content {
+        width: 70%; 
+        max-width: 400px; 
+    }
+}
+
+@media (min-width: 900px) {
+    .popup-content {
+        width: 50%;
+        max-width: 500px; 
+    }
+}
+
+@media (min-width: 1200px) {
+    .popup-content {
+        width: 40%; 
+        max-width: 600px; 
+    }
 }

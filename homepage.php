@@ -24,9 +24,6 @@ if (!isset($_SESSION['username'])) {
     <nav class="navbar">
         <a href="#"><img src="img/logo.jpg.jpg" alt="Logo" class="logo"></a>
             <ul class="nav-links">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about-us">About Us</a></li>
-                <li><a href="#services">Services</a></li>
                 <button class="logout-btn" onclick="window.location.href='logout.php'">Logout</button>
             </ul>
     </nav>

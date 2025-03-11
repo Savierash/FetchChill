@@ -71,7 +71,6 @@ function markAsRead(element) {
 
 
 //////////////////////////DASHBOARD
-
 async function fetchDashboardData() {
     try {
         const response = await fetch('https://example.com/api/dashboard'); 
@@ -86,9 +85,9 @@ async function fetchDashboardData() {
     }
 }
 
-
 document.addEventListener("DOMContentLoaded", fetchDashboardData);
 setInterval(fetchDashboardData, 5000);
+
 
 
 ///////////////////////////APPOINTMENT
@@ -140,6 +139,48 @@ function searchAppointments() {
         }
     });
 }
+////////////////////////////////////MEDICAL RECORDS
+////////////////////////////////////BREED TYPE
+function updateBreeds() {
+    const petType = document.getElementById("petType").value;
+    const breedSelect = document.getElementById("breed");
+    breedSelect.innerHTML = ""; 
+
+    const defaultOption = document.createElement("option");
+    defaultOption.value = "";
+    defaultOption.textContent = "Select a breed";
+    breedSelect.appendChild(defaultOption);
+
+    const dogBreeds = [
+        "Labrador Retriever", "German Shepherd", "Golden Retriever", "Bulldog",
+        "Beagle", "Poodle", "Rottweiler", "Shih Tzu", "Siberian Husky",
+        "Chihuahua", "Pug", "Doberman", "Dalmatian", "Border Collie", "Corgi"
+    ];
+
+    const catBreeds = [
+        "Persian", "Siamese", "Maine Coon", "Ragdoll",
+        "Bengal", "Sphynx", "Scottish Fold", "British Shorthair",
+        "Abyssinian", "Russian Blue", "Siberian", "Norwegian Forest Cat"
+    ];
+
+    let selectedBreeds = [];
+
+    if (petType === "Dog") {
+        selectedBreeds = dogBreeds;
+    } else if (petType === "Cat") {
+        selectedBreeds = catBreeds;
+    }
+
+    selectedBreeds.forEach(breed => {
+        const option = document.createElement("option");
+        option.value = breed;
+        option.textContent = breed;
+        breedSelect.appendChild(option);
+    });
+
+    breedSelect.required = selectedBreeds.length > 0;
+}
+
 
 //////////////////Medical Records pop up
 function openPopup() {
@@ -179,70 +220,16 @@ document.getElementById('medicalForm').addEventListener('submit', function(event
 });
 
 
- //////////////////// Database pet records
- document.getElementById("medicalForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-
-    let formData = new FormData(this);
-
-    fetch("dashboard.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        loadRecords(); 
-        this.reset(); 
-    })
-    .catch(error => console.error("Error:", error));
-});
-
-
-function loadRecords() {
-    fetch("dashboard.php")
-    .then(response => response.json())
-    .then(data => {
-        let tableBody = document.getElementById("tableBody");
-        tableBody.innerHTML = ""; 
-
-        if (data.message) {
-            tableBody.innerHTML = "<tr><td colspan='10'>No records found.</td></tr>";
-        } else {
-            data.forEach(record => {
-                tableBody.innerHTML += `
-                    <tr>
-                        <td>${record.ownername}</td>
-                        <td>${record.petname}</td>
-                        <td>${record.breed}</td>
-                        <td>${record.weight}</td>
-                        <td>${record.age}</td>
-                        <td>${record.gender}</td>
-                        <td>${record.visitdate}</td>
-                        <td>${record.time}</td>
-                        <td>${record.diagnosis}</td>
-                        <td>${record.treatment}</td>
-                    </tr>
-                `;
-            });
-        }
-    })
-    .catch(error => console.error("Error:", error));
-}
-
-loadRecords();
-
 
 //timer for success meassage
-window.onload = function() {
+document.addEventListener("DOMContentLoaded", function() {
     setTimeout(function() {
-        
         var successMessage = document.getElementById("successMessage");
         if (successMessage) {
             successMessage.style.display = "flex";
         }
-    }, 10000); 
-}
+    }, 10000);
+});
 
 
 

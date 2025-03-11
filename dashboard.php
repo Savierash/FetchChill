@@ -1,63 +1,73 @@
 <?php
-session_start();  
+session_start();
 
 include 'pet_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-   
-    $ownername = $_POST['ownerName'] ?? null;
-    $petname = $_POST['petName'] ?? null;
-    $breed = $_POST['breed'] ?? null;
-    $weight = $_POST['weight'] ?? null;
-    $age = $_POST['age'] ?? null;
-    $gender = $_POST['gender'] ?? null;
-    $visitdate = $_POST['checkupDate'] ?? null;
-    $time = $_POST['time'] ?? null;
-    $diagnosis = $_POST['diagnosis'] ?? null;
-    $treatment = $_POST['treatment'] ?? null;
-
     
-    if (!$ownername || !$petname || !$breed || !$weight || !$age || !$gender || !$visitdate || !$time || !$diagnosis || !$treatment) {
-        echo "<div style='background-color: red; color: white; padding: 10px; text-align: center;'>
-                Error: Missing required fields!
-              </div>";
+    $ownername = htmlspecialchars($_POST['ownerName'] ?? '');
+    $petname = htmlspecialchars($_POST['petName'] ?? '');
+    $petType = htmlspecialchars($_POST['petType'] ?? '');
+    $breed = htmlspecialchars($_POST['breed'] ?? '');
+    $weight = intval($_POST['weight'] ?? 0);
+    $age = intval($_POST['age'] ?? 0);
+    $gender = htmlspecialchars($_POST['gender'] ?? '');
+    $visitdate = htmlspecialchars($_POST['checkupDate'] ?? '');
+    $time = htmlspecialchars($_POST['time'] ?? '');
+    $vaccine = htmlspecialchars($_POST['vaccine'] ?? '');
+    $veterinarian = htmlspecialchars($_POST['veterinarian'] ?? '');
+    $diagnosis = htmlspecialchars($_POST['diagnosis'] ?? '');
+    $treatment = htmlspecialchars($_POST['treatment'] ?? '');
+
+    if (empty($ownername) || empty($petname) || empty($breed) || empty($weight) || empty($age) || empty($gender) || empty($visitdate) || empty($time) || empty($diagnosis) || empty($treatment)) {
+        $_SESSION['error_message'] = "Error: Missing required fields!";
+        header("Location: dashboard.php"); 
         exit();
     }
 
-    $sql = "INSERT INTO petrecords (ownername, petname, breed, weight, age, gender, visitdate, time, diagnosis, treatment) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO petrecords (ownername, petname, petType, breed, weight, age, gender, visitdate, time, vaccine, veterinarian, diagnosis, treatment) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssiiissss", $ownername, $petname, $breed, $weight, $age, $gender, $visitdate, $time, $diagnosis, $treatment);
+    if ($stmt) {
+        $stmt->bind_param("ssssiisssssss", $ownername, $petname, $petType, $breed, $weight, $age, $gender, $visitdate, $time, $vaccine, $veterinarian, $diagnosis, $treatment);
 
-    if ($stmt->execute()) {
-        $_SESSION['success_message'] = "Record added successfully!";
-        header("Location: dashboard.php");  
-        exit();
+        if ($stmt->execute()) {
+            $_SESSION['success_message'] = "Record added successfully!";
+        } else {
+            $_SESSION['error_message'] = "Error adding record: " . $stmt->error;
+        }
+        $stmt->close();
     } else {
-        echo "<div style='background-color: red; color: white; padding: 10px; text-align: center;'>
-                Error adding record!
-              </div>";
+        $_SESSION['error_message'] = "Error preparing SQL statement: " . $conn->error;
     }
-    $stmt->close();
-}
 
+    header("Location: dashboard.php");
+    exit();
+}
 
 if (isset($_SESSION['success_message'])) {
     echo "<div id='successMessage' style='background-color: #4CAF50; color: white; padding: 10px; text-align: center;'>
             {$_SESSION['success_message']}
           </div>";
-    unset($_SESSION['success_message']);  
+    unset($_SESSION['success_message']);
+}
+
+if (isset($_SESSION['error_message'])) {
+    echo "<div id='errorMessage' style='background-color: red; color: white; padding: 10px; text-align: center;'>
+            {$_SESSION['error_message']}
+          </div>";
+    unset($_SESSION['error_message']);
 }
 
 $sql = "SELECT * FROM petrecords";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-    
     $records = $result->fetch_all(MYSQLI_ASSOC);
 } else {
     $records = [];
 }
+
 $conn->close();
 ?>
 
@@ -236,8 +246,17 @@ $conn->close();
             <label for="petName">Pet Name:</label>
             <input type="text" id="petName" name="petName" required>
 
+            <label for="petType">Pet Type:</label>
+            <select id="petType" name="petType" required onchange="updateBreeds()">
+                <option value="">Select a pet type</option>
+                <option value="Dog">Dog</option>
+                <option value="Cat">Cat</option>
+            </select>
+
             <label for="breed">Breed:</label>
-            <input type="text" id="breed" name="breed" required>
+            <select id="breed" name="breed" required>
+                <option value="">Select a breed</option>
+            </select>
 
             <label for="weight">Weight (kg):</label>
             <input type="number" id="weight" name="weight" required>
@@ -256,6 +275,13 @@ $conn->close();
 
             <label for="time">Time:</label>
             <input type="time" id="time" name="time" required>
+
+            <label for="vaccine">Vaccine:</label>
+            <input type="text" id="vaccine" name="vaccine" required>
+
+            <label for="veterinary">Veterinary:</label>
+            <input type="text" id="veterinarian" name="veterinarian" required>
+
 
             <label for="diagnosis">Diagnosis:</label>
             <input type="text" id="diagnosis" name="diagnosis" required>
