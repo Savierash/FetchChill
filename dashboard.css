@@ -13,6 +13,9 @@ body {
     background: #E7F1FF;
 }
 
+#dashboard {
+    display: block;
+}
 
 #appointments,
 #medicalRecords{

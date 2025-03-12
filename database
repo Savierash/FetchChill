@@ -42,4 +42,10 @@ CREATE TABLE `petrecords` (
 <!--add data-->
 ALTER TABLE `petrecords`
   ADD COLUMN time TIME NOT NULL;
+ALTER TABLE `petrecords`
+  ADD COLUMN petType VARCHAR(255) NOT NULL;
+ALTER TABLE `petrecords`
+  ADD COLUMN vaccine VARCHAR(255) NOT NULL;
+ALTER TABLE `petrecords`
+  ADD COLUMN veterinarian DATE NOT NULL;
 

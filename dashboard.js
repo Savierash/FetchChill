@@ -127,18 +127,20 @@ function filterAppointments(status) {
 
 // Search function for Appointments
 function searchAppointments() {
-    const query = document.getElementById("search-bar").value.toLowerCase();
-    const rows = document.querySelectorAll("#appointment-list tr");
-    
-    rows.forEach(row => {
-        const customerName = row.querySelector(".customer-name").textContent.toLowerCase();
-        if (customerName.includes(query)) {
-            row.style.display = "";
+    const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+    const appointmentList = document.getElementById('appointment-list');
+    const rows = appointmentList.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const ownerName = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+        if (ownerName.includes(searchTerm)) {
+            rows[i].style.display = '';
         } else {
-            row.style.display = "none";
+            rows[i].style.display = 'none';
         }
-    });
+    }
 }
+
 ////////////////////////////////////MEDICAL RECORDS
 ////////////////////////////////////BREED TYPE
 function updateBreeds() {
@@ -219,18 +221,41 @@ document.getElementById('medicalForm').addEventListener('submit', function(event
     });
 });
 
+//Search function for Medical Records
+function searchMedical() {
+    const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+    const medicalList = document.getElementById('medical-list');
+    const rows = medicalList.getElementsByTagName('tr');
+
+    for (let i = 0; i < rows.length; i++) {
+        const ownerName = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+        if (ownerName.includes(searchTerm)) {
+            rows[i].style.display = '';
+        } else {
+            rows[i].style.display = 'none';
+        }
+    }
+}
+
 
 
 //timer for success meassage
-document.addEventListener("DOMContentLoaded", function() {
+function hideMessage(elementId, delay) {
     setTimeout(function() {
-        var successMessage = document.getElementById("successMessage");
-        if (successMessage) {
-            successMessage.style.display = "flex";
+        var element = document.getElementById(elementId);
+        if (element) {
+            element.style.display = 'none';
         }
-    }, 10000);
-});
+    }, delay);
+}
 
+if (document.getElementById('successMessage')) {
+    hideMessage('successMessage', 3000);
+}
+
+if (document.getElementById('errorMessage')) {
+    hideMessage('errorMessage', 3000);
+}
 
 
 
@@ -243,6 +268,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
 
 
 
