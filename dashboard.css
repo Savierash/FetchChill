@@ -454,7 +454,7 @@ th {
     text-decoration-thickness: 1px; 
 }
 
-/* Search Bar */
+/* Search Bar for Appointment */
 .appointment-search {
     width: 100%;
     max-width: 500px;
@@ -471,7 +471,7 @@ th {
     align-items: center;
 }
 
-#search-bar {
+#search-appointment {
     width: 100%;
     padding: 15px 30px;
     font-size: 16px;
@@ -482,17 +482,17 @@ th {
     transition: border-color 0.3s ease, box-shadow 0.3s ease; 
 }
 
-#search-bar:hover {
+#search-appointment:hover {
     border-color: #0077ff; 
     box-shadow: 0 0 8px rgba(0, 119, 255, 0.3); 
 }
 
-#search-bar:focus {
+#search-appointment:focus {
     border-color: #000000;
     box-shadow: 0 0 12px rgba(0, 119, 255, 0.5); 
 }
 
-#search-bar::placeholder {
+#search-appointment::placeholder {
     color: #999;
     font-weight: bold;
 }
@@ -570,12 +570,59 @@ th {
 }
 
 /*Medical search bar*/
+/* Search Bar for Medical*/
 .medical-search {
     width: 100%;
     max-width: 500px;
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+}
+
+#search-medical {
+    width: 100%;
+    padding: 15px 30px;
+    font-size: 16px;
+    border: 1px solid #5c5959;
+    border-radius: 15px;
+    outline: none;
+    padding-left: 35px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+#search-medical:hover {
+    border-color: #0077ff; 
+    box-shadow: 0 0 8px rgba(0, 119, 255, 0.3); 
+}
+
+#search-medical:focus {
+    border-color: #000000;
+    box-shadow: 0 0 12px rgba(0, 119, 255, 0.5); 
+}
+
+#search-medical::placeholder {
+    color: #999;
+    font-weight: bold;
+}
+
+.search-container i {
+    position: absolute;
+    left: 10px;
+    font-size: 30px;
+    color: #0077ff;
+    transition: color 0.3s ease; 
+}
+
+.search-container:hover i {
+    color: #005bb5; 
 }
 
 .add-record {

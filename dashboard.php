@@ -2,34 +2,36 @@
 session_start();
 include 'pet_connection.php';
 
+// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
+    // Sanitize and validate input data
     $ownername = htmlspecialchars($_POST['ownerName'] ?? '');
     $petname = htmlspecialchars($_POST['petName'] ?? '');
     $petType = htmlspecialchars($_POST['petType'] ?? '');
     $breed = htmlspecialchars($_POST['breed'] ?? '');
-    $weight = intval($_POST['weight'] ?? 0);
-    $age = intval($_POST['age'] ?? 0);
+    $weight = is_numeric($_POST['weight']) ? intval($_POST['weight']) : null;
+    $age = is_numeric($_POST['age']) ? intval($_POST['age']) : null;
     $gender = htmlspecialchars($_POST['gender'] ?? '');
     $visitdate = htmlspecialchars($_POST['checkupDate'] ?? '');
     $time = htmlspecialchars($_POST['time'] ?? '');
-    $vaccine = htmlspecialchars($_POST['vaccine'] ?? '');
-    $veterinarian = htmlspecialchars($_POST['veterinarian'] ?? '');
+    $vaccine = htmlspecialchars($_POST['vaccine'] ?? 'N/A');
+    $veterinarian = htmlspecialchars($_POST['veterinarian'] ?? 'N/A');
     $diagnosis = htmlspecialchars($_POST['diagnosis'] ?? '');
     $treatment = htmlspecialchars($_POST['treatment'] ?? '');
 
-    if (empty($ownername) || empty($petname) || empty($breed) || empty($weight) || empty($age) || empty($gender) || empty($visitdate) || empty($time) || empty($diagnosis) || empty($treatment)) {
+    // Validate required fields
+    if (empty($ownername) || empty($petname) || empty($petType) || empty($breed) || empty($weight) || empty($age) || empty($gender) || empty($visitdate) || empty($time) || empty($diagnosis) || empty($treatment)) {
         $_SESSION['error_message'] = "Error: Missing required fields!";
         header("Location: dashboard.php");
         exit();
     }
 
+    // Prepare and execute SQL statement
     $sql = "INSERT INTO petrecords (ownername, petname, petType, breed, weight, age, gender, visitdate, time, vaccine, veterinarian, diagnosis, treatment) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
     if ($stmt) {
         $stmt->bind_param("ssssiisssssss", $ownername, $petname, $petType, $breed, $weight, $age, $gender, $visitdate, $time, $vaccine, $veterinarian, $diagnosis, $treatment);
-
         if ($stmt->execute()) {
             $_SESSION['success_message'] = "Record added successfully!";
         } else {
@@ -44,13 +46,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit();
 }
 
-// Handle search for appointments
-$search = '';
-if (isset($_GET['search'])) {
-    $search = htmlspecialchars($_GET['search']);
-}
+// Handle search
+$search = isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '';
 
-// Fetch records 
+// Fetch records based on search term
 if (!empty($search)) {
     $sql = "SELECT * FROM petrecords WHERE ownername LIKE ?";
     $stmt = $conn->prepare($sql);
@@ -70,29 +69,10 @@ if (!empty($search)) {
         $records = [];
     }
 } else {
-    // Fetch all records
+    // Fetch all records if no search term is provided
     $sql = "SELECT * FROM petrecords";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        $records = $result->fetch_all(MYSQLI_ASSOC);
-    } else {
-        $records = [];
-    }
-}
-
-// Handle search for medical records
-$search = '';
-if (isset($_GET['search'])) {
-    $search = htmlspecialchars($_GET['search']);
-}
-
-// Fetch medical records 
-if (!empty($search)) {
-    $sql = "SELECT * FROM petrecords WHERE ownername LIKE ?";
     $stmt = $conn->prepare($sql);
     if ($stmt) {
-        $searchTerm = "%$search%";
-        $stmt->bind_param("s", $searchTerm);
         $stmt->execute();
         $result = $stmt->get_result();
         if ($result->num_rows > 0) {
@@ -105,17 +85,9 @@ if (!empty($search)) {
         $_SESSION['error_message'] = "Error preparing SQL statement: " . $conn->error;
         $records = [];
     }
-} else {
-    // Fetch all records 
-    $sql = "SELECT * FROM petrecords";
-    $result = $conn->query($sql);
-    if ($result->num_rows > 0) {
-        $records = $result->fetch_all(MYSQLI_ASSOC);
-    } else {
-        $records = [];
-    }
-}                       
+}
 
+// Display success and error messages
 if (isset($_SESSION['success_message'])) {
     echo "<div id='successMessage' style='background-color: #4CAF50; color: white; padding: 10px; text-align: center;'>
             {$_SESSION['success_message']}
@@ -132,6 +104,7 @@ if (isset($_SESSION['error_message'])) {
 
 $conn->close();
 ?>
+
 
 
 
@@ -231,14 +204,13 @@ $conn->close();
             <div class="appointment-search">
                 <div class="search-container">
                     <i class='bx bx-search'></i>
-                    <input type="text" id="search-bar" placeholder="Search your appointment..." onkeyup="searchAppointments()">
+                    <input type="text" id="search-appointment" placeholder="Search your appointment..." onkeyup="searchAppointments()">
                 </div>
             </div>
             <h1>Appointments</h1>
             <div class="appointment-filter">
                 <button onclick="filterAppointments('all')">All Appointments</button>
                 <button onclick="filterAppointments('confirmed')">Confirmed</button>
-                <button onclick="filterAppointments('pending')">Pending</button>
                 <button onclick="filterAppointments('cancelled')">Cancelled</button>
             </div>
             <table>
@@ -261,7 +233,6 @@ $conn->close();
                                 <td class="status">Pending</td>
                                 <td class="buttons">
                                     <button class="confirm" onclick="updateStatus(this, 'Confirmed')">Confirm</button>
-                                    <button class="pending" onclick="updateStatus(this, 'Pending')">Pending</button>
                                     <button class="cancel" onclick="updateStatus(this, 'Cancelled')">Cancel</button>
                                 </td>
                             </tr>
@@ -278,10 +249,10 @@ $conn->close();
         <!------------------ Medical Records ---------------------->
         <div id="medicalRecords" class="medical-container" style="display:none;">
              <!------------------ Search ---------------------->
-            <div class="medical-search">
+             <div class="medical-search">
                 <div class="search-container">
                     <i class='bx bx-search'></i>
-                    <input type="text" id="search-bar" placeholder="Search your medical records..." onkeyup="searchMedical()">
+                    <input type="text" id="search-medical" placeholder="Search your medical records..." onkeyup="searchMedicals()">
                 </div>
             </div>
             <h1>Client Records</h1>

@@ -98,22 +98,16 @@ function updateStatus(button, newStatus) {
 
     if (newStatus === 'Confirmed') {
         statusCell.style.color = 'green';
-    } else if (newStatus === 'Pending') {
-        statusCell.style.color = 'orange';
     } else if (newStatus === 'Cancelled') {
         statusCell.style.color = 'red';
     }
 }
-
- // Function to update appointment status
  function updateStatus(button, status) {
     const row = button.closest('tr');
     const statusCell = row.querySelector('.status');
     statusCell.textContent = status;
     row.setAttribute('data-status', status.toLowerCase());
 }
-
-// Function to filter appointments based on status
 function filterAppointments(status) {
     const rows = document.querySelectorAll('#appointment-list tr');
     rows.forEach(row => {
@@ -127,7 +121,7 @@ function filterAppointments(status) {
 
 // Search function for Appointments
 function searchAppointments() {
-    const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+    const searchTerm = document.getElementById('search-appointment').value.toLowerCase();
     const appointmentList = document.getElementById('appointment-list');
     const rows = appointmentList.getElementsByTagName('tr');
 
@@ -222,20 +216,22 @@ document.getElementById('medicalForm').addEventListener('submit', function(event
 });
 
 //Search function for Medical Records
-function searchMedical() {
-    const searchTerm = document.getElementById('search-bar').value.toLowerCase();
+function searchMedicals() {
+    const searchTerm = document.getElementById('search-medical').value.toLowerCase(); 
     const medicalList = document.getElementById('medical-list');
     const rows = medicalList.getElementsByTagName('tr');
 
     for (let i = 0; i < rows.length; i++) {
-        const ownerName = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase();
+        const ownerName = rows[i].getElementsByTagName('td')[0].textContent.toLowerCase(); 
         if (ownerName.includes(searchTerm)) {
-            rows[i].style.display = '';
+            rows[i].style.display = ''; 
         } else {
-            rows[i].style.display = 'none';
+            rows[i].style.display = 'none'; 
         }
     }
 }
+
+
 
 
 
