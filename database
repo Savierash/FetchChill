@@ -49,3 +49,22 @@ ALTER TABLE `petrecords`
 ALTER TABLE `petrecords`
   ADD COLUMN veterinarian DATE NOT NULL;
 
+
+<!-- Create a database -->
+<!-- Appointments -->
+CREATE TABLE appointments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    service_type VARCHAR(255) NOT NULL,
+    appointment_date DATE NOT NULL,
+    appointment_time TIME NOT NULL,
+    status VARCHAR(50) DEFAULT 'pending'
+);
+
+
+INSERT INTO appointments (user_id, service_type, appointment_date, appointment_time, status)
+VALUES
+(1, 'Grooming', '2023-10-25', '10:00:00', 'pending'),
+(2, 'Vaccination', '2023-10-26', '11:30:00', 'pending'),
+(3, 'Checkup', '2023-10-27', '09:00:00', 'confirmed'),
+(4, 'Surgery', '2023-10-28', '14:00:00', 'cancelled');

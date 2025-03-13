@@ -1,8 +1,15 @@
 <?php
 session_start();
-include 'pet_connection.php';
+include 'pet_connection.php'; 
+require 'Appointment.php'; 
 
-// Handle form submission
+// Create an instance of the Appointment class
+$appointment = new Appointment();
+
+// Fetch all appointments using the Appointment class
+$appointments = $appointment->GetAllAppointments();
+
+// Handle form submission for medical records
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize and validate input data
     $ownername = htmlspecialchars($_POST['ownerName'] ?? '');
@@ -199,52 +206,52 @@ $conn->close();
         </div>
 
         <!------------------ Appointments ---------------------->
-        <div id="appointments" class="appointment-container" style="display:none;">
-            <!------------------ Search ---------------------->
-            <div class="appointment-search">
-                <div class="search-container">
-                    <i class='bx bx-search'></i>
-                    <input type="text" id="search-appointment" placeholder="Search your appointment..." onkeyup="searchAppointments()">
-                </div>
-            </div>
-            <h1>Appointments</h1>
-            <div class="appointment-filter">
-                <button onclick="filterAppointments('all')">All Appointments</button>
-                <button onclick="filterAppointments('confirmed')">Confirmed</button>
-                <button onclick="filterAppointments('cancelled')">Cancelled</button>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th class="tableh">APPOINTMENT DATE</th>
-                        <th class="tableh">CUSTOMERS</th>
-                        <th class="tableh">SERVICE</th>
-                        <th class="tableh">STATUS</th>
-                        <th class="tableh">ACTION</th>
-                    </tr>
-                </thead>
-                <tbody id="appointment-list">
-                    <?php if (!empty($records)): ?>
-                        <?php foreach ($records as $record): ?>
-                            <tr data-status="pending">
-                                <td><?php echo isset($record['visitdate']) ? htmlspecialchars($record['visitdate']) : 'N/A'; ?></td>
-                                <td><?php echo isset($record['ownername']) ? htmlspecialchars($record['ownername']) : 'N/A'; ?></td>
-                                <td><?php echo isset($record['petname']) ? htmlspecialchars($record['petname']) : 'N/A'; ?></td>
-                                <td class="status">Pending</td>
-                                <td class="buttons">
-                                    <button class="confirm" onclick="updateStatus(this, 'Confirmed')">Confirm</button>
-                                    <button class="cancel" onclick="updateStatus(this, 'Cancelled')">Cancel</button>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="5" style="text-align: center;">No records found</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+<div id="appointments" class="appointment-container" style="display:none;">
+    <!------------------ Search ---------------------->
+    <div class="appointment-search">
+        <div class="search-container">
+            <i class='bx bx-search'></i>
+            <input type="text" id="search-appointment" placeholder="Search your appointment..." onkeyup="searchAppointments()">
         </div>
+    </div>
+    <h1>Appointments</h1>
+    <div class="appointment-filter">
+        <button onclick="filterAppointments('all')">All Appointments</button>
+        <button onclick="filterAppointments('confirmed')">Confirmed</button>
+        <button onclick="filterAppointments('cancelled')">Cancelled</button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th class="tableh">APPOINTMENT DATE</th>
+                <th class="tableh">CUSTOMERS</th>
+                <th class="tableh">SERVICE</th>
+                <th class="tableh">STATUS</th>
+                <th class="tableh">ACTION</th>
+            </tr>
+        </thead>
+        <tbody id="appointment-list">
+    <?php if (!empty($appointments)): ?>
+        <?php foreach ($appointments as $appointment): ?>
+            <tr data-id="<?php echo $appointment['id']; ?>" data-status="<?php echo htmlspecialchars($appointment['status'] ?? 'pending'); ?>">
+                <td><?php echo isset($appointment['appointment_date']) ? htmlspecialchars($appointment['appointment_date']) : 'N/A'; ?></td>
+                <td><?php echo isset($appointment['user_id']) ? htmlspecialchars($appointment['user_id']) : 'N/A'; ?></td>
+                <td><?php echo isset($appointment['service_type']) ? htmlspecialchars($appointment['service_type']) : 'N/A'; ?></td>
+                <td class="status"><?php echo isset($appointment['status']) ? htmlspecialchars($appointment['status']) : 'Pending'; ?></td>
+                <td class="buttons">
+                    <button class="confirm" onclick="updateStatus(<?php echo $appointment['id']; ?>, 'Confirmed')">Confirm</button>
+                    <button class="cancel" onclick="updateStatus(<?php echo $appointment['id']; ?>, 'Cancelled')">Cancel</button>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="5" style="text-align: center;">No appointments found</td>
+        </tr>
+    <?php endif; ?>
+</tbody>
+</table>
+</div>
 
         <!------------------ Medical Records ---------------------->
         <div id="medicalRecords" class="medical-container" style="display:none;">

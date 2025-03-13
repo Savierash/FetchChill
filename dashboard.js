@@ -71,50 +71,91 @@ function markAsRead(element) {
 
 
 //////////////////////////DASHBOARD
-async function fetchDashboardData() {
-    try {
-        const response = await fetch('https://example.com/api/dashboard'); 
-        const data = await response.json();
 
-        document.getElementById('services-count').textContent = data.services;
-        document.getElementById('confirmed-count').textContent = data.confirmed;
-        document.getElementById('pending-count').textContent = data.pending;
-        document.getElementById('cancelled-count').textContent = data.cancelled;
-    } catch (error) {
-        console.error('Error fetching dashboard data:', error);
-    }
-}
-
-document.addEventListener("DOMContentLoaded", fetchDashboardData);
-setInterval(fetchDashboardData, 5000);
 
 
 
 ///////////////////////////APPOINTMENT
-function updateStatus(button, newStatus) {
-    let row = button.closest("tr");
-    let statusCell = row.querySelector(".status");
-    statusCell.textContent = newStatus;
+function updateStatus(appointmentId, newStatus) {
+    if (confirm(`Are you sure you want to mark this appointment as ${newStatus}?`)) {
+        console.log("Sending data:", { id: appointmentId, status: newStatus });
 
-    if (newStatus === 'Confirmed') {
-        statusCell.style.color = 'green';
-    } else if (newStatus === 'Cancelled') {
-        statusCell.style.color = 'red';
+        fetch('update_status.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: appointmentId, status: newStatus }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}, Message: ${response.statusText}`);
+            }
+
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.error('Invalid JSON response:', text);
+                    throw new Error('Invalid JSON response');
+                }
+            });
+        })
+        .then(data => {
+            console.log("Response from server:", data);
+            if (data.success) {
+                const row = document.querySelector(`tr[data-id="${appointmentId}"]`);
+                if (row) {
+                    const statusCell = row.querySelector('.status');
+                    statusCell.textContent = newStatus;
+                    row.setAttribute('data-status', newStatus);
+
+                    if (newStatus === 'Confirmed') {
+                        row.style.backgroundColor = '#e6ffe6';
+                    } else if (newStatus === 'Cancelled') {
+                        row.style.backgroundColor = '#ffe6e6';
+                    }
+
+                    const buttons = row.querySelectorAll('.buttons button');
+                    buttons.forEach(button => button.disabled = true);
+                }
+                alert(`Appointment status updated to ${newStatus}.`);
+            } else {
+                alert('Error updating status: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Full error details:", {
+                error: error.message,
+                stack: error.stack,
+                request: {
+                    url: 'update_status.php',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: appointmentId, status: newStatus }),
+                },
+            });
+            alert('An error occurred while updating the status. Check the console for details.');
+        });
     }
 }
- function updateStatus(button, status) {
-    const row = button.closest('tr');
-    const statusCell = row.querySelector('.status');
-    statusCell.textContent = status;
-    row.setAttribute('data-status', status.toLowerCase());
-}
-function filterAppointments(status) {
-    const rows = document.querySelectorAll('#appointment-list tr');
+
+//appointment filter
+function filterAppointments(filter) {
+    console.log("Filtering appointments by:", filter);
+
+    // Kunin ang lahat ng appointment rows
+    const rows = document.querySelectorAll('tr[data-status]');
+
+    // I-loop ang bawat row at i-toggle ang visibility batay sa filter
     rows.forEach(row => {
-        if (status === 'all' || row.getAttribute('data-status') === status) {
-            row.style.display = ''; 
+        const status = row.getAttribute('data-status').toLowerCase();
+        if (filter === 'all' || status === filter) {
+            row.style.display = ''; // Ipakita ang row
         } else {
-            row.style.display = 'none'; 
+            row.style.display = 'none'; // Itago ang row
         }
     });
 }
