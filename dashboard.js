@@ -221,15 +221,20 @@ function updateBreeds() {
 
 //////////////////Medical Records pop up
 function openPopup() {
-    document.querySelector('.popup-container').style.display = 'flex';
+    const popupContainer = document.querySelector('.popup-container');
+    if (popupContainer) {
+        popupContainer.style.display = 'flex';
+        setTimeout(() => popupContainer.classList.add('show'), 10);
+    }
 }
 
 function closePopup() {
-    document.querySelector('.popup-container').style.display = 'none';
+    const popupContainer = document.querySelector('.popup-container');
+    if (popupContainer) {
+        popupContainer.classList.remove('show');
+        setTimeout(() => popupContainer.style.display = 'none', 300);
+    }
 }
-
-document.querySelector('.open-popup-button').addEventListener('click', openPopup);
-document.querySelector('.close-btn').addEventListener('click', closePopup);
 
 
  /////////////////////////// Submit button medical records
@@ -272,10 +277,6 @@ function searchMedicals() {
     }
 }
 
-
-
-
-
 //timer for success meassage
 function hideMessage(elementId, delay) {
     setTimeout(function() {
@@ -295,8 +296,7 @@ if (document.getElementById('errorMessage')) {
 }
 
 
-
-//////////////////////////USER MANAGEMENT
+//pop up add medical records
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll(".view-button").forEach(button => {
         button.addEventListener("click", function () {
@@ -309,3 +309,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+//////////////////////////USER MANAGEMENT
+function searchUsers() {
+    const searchTerm = document.getElementById('search-management').value.toLowerCase();
+
+    const rows = document.querySelectorAll('#user-list tr');
+
+    rows.forEach(row => {
+        const name = row.querySelector('.tabledata:nth-child(1)').textContent.toLowerCase();
+        const email = row.querySelector('.tabledata:nth-child(2)').textContent.toLowerCase();
+        const role = row.querySelector('.tabledata:nth-child(3)').textContent.toLowerCase();
+
+        if (name.includes(searchTerm) || email.includes(searchTerm) || role.includes(searchTerm)) {
+            row.style.display = ''; 
+        } else {
+            row.style.display = 'none'; 
+        }
+    });
+}
+
+function deleteUser(userId) {
+    if (confirm('Are you sure you want to delete this user?')) {
+        fetch(`delete_user.php`, {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `id=${userId}` 
+        }).then(response => {
+            if (response.ok) {
+                location.reload(); 
+            }
+        });
+    }
+}

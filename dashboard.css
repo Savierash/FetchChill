@@ -395,7 +395,7 @@ table {
     margin-top: 20px;
 }
 th, td {
-    border: 1px solid black;
+    border: 1px solid #6b6a6a;
     padding: 10px;
     text-align: left;
 }
@@ -439,6 +439,7 @@ th {
     font-size: 16px;
     border-radius: 5px;
     font-weight: bold;
+    background: none;
 }
 
 .appointment-filter button:hover {
@@ -546,6 +547,9 @@ th {
     padding: 10px;
     text-align: left;
 }
+.med-heading {
+    color: white;
+}
 
 .med-form th {
     background-color: #7096D1; 
@@ -635,6 +639,7 @@ th {
     margin-bottom: 25px;
     float: right;
     font-size: 16px; 
+    border: none;
     font-weight: bold; 
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease-in-out; 
@@ -648,7 +653,8 @@ th {
 }
 
 
-/* Popup Container */
+/* Popup Container for add recor*/
+
 .popup-container {
     display: none;
     position: fixed;
@@ -659,15 +665,20 @@ th {
     background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
+    overflow-y: auto; 
 }
 
 .popup-content {
-    background: white;
+    background: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 500px;
-    max-width: 90%;
+    width: 90%; 
+    max-width: 300px;
+    margin: 20px auto; 
+    max-height: 80vh; 
+    overflow-y: auto; 
 }
+
 
 .close-btn {
     float: right;
@@ -695,6 +706,29 @@ th {
 
 .close-btn:active {
     transform: scale(0.9); 
+}
+
+
+
+@media (min-width: 600px) {
+    .popup-content {
+        width: 70%; 
+        max-width: 400px; 
+    }
+}
+
+@media (min-width: 900px) {
+    .popup-content {
+        width: 50%;
+        max-width: 500px; 
+    }
+}
+
+@media (min-width: 1200px) {
+    .popup-content {
+        width: 40%; 
+        max-width: 600px; 
+    }
 }
 
 /* Form Layout */
@@ -758,7 +792,7 @@ th {
 
 
 
-/************************* Profile Container ***************************/
+/************************* User Management Container ***************************/
 .management-container {
     width: 80%;
     margin: auto;
@@ -769,127 +803,113 @@ th {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); 
 }
 
-.profile-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.profile-card {
-    text-align: center;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 200px;
-}
-
-.profile-picture img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-}
-
-.profile-info h2 {
-    margin: 0;
-    font-size: 18px;
-    color: #333;
-}
-
-.profile-info .role {
-    margin: 0;
-    font-size: 14px;
-    color: #777;
-}
-
-.personal-info-container {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-}
-
-.personal-info-container h2 {
-    margin-top: 0;
-    font-size: 20px;
-    color: #333;
-}
-
-.info-section {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background: #f9f9f9;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.info-item label {
-    font-weight: bold;
-    color: #555;
-}
-
-.info-item span {
-    color: #333;
-}
-
-.popup-container {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
+table {
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    overflow-y: auto; 
+    border-collapse: collapse;
+}
+table, .tablehead  {
+    border: 1px solid #6b6a6a;
+}
+.tabledata {
+    border: 1px solid #6d6a6a;
+}
+.tablehead, .tabledata {
+    padding: 12px;
+    text-align: left;
+}
+.tablehead {
+    color: white;
+    background-color: #7096D1;
 }
 
-.popup-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    width: 90%; 
-    max-width: 300px;
-    margin: 20px auto; 
-    max-height: 80vh; 
-    overflow-y: auto; 
-}
-
-.close-btn {
-    float: right;
+.delete-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
     cursor: pointer;
 }
-
-
-@media (min-width: 600px) {
-    .popup-content {
-        width: 70%; 
-        max-width: 400px; 
-    }
+.delete-button:hover {
+    background-color: #cc0000;
+}
+.add-user-button {
+    display: inline-block;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #7096D1, #0056b3); 
+    color: white;
+    text-decoration: none;
+    border-radius: 30px; 
+    margin-bottom: 25px;
+    float: right;
+    font-size: 16px; 
+    font-weight: bold; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out; 
+    border: none; 
+    cursor: pointer; 
 }
 
-@media (min-width: 900px) {
-    .popup-content {
-        width: 50%;
-        max-width: 500px; 
-    }
+.add-user-button:hover {
+    background: linear-gradient(135deg, #0056b3, #7096D1);
+    transform: scale(1.05); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
 }
 
-@media (min-width: 1200px) {
-    .popup-content {
-        width: 40%; 
-        max-width: 600px; 
-    }
+
+/******************************** user-search bar ********************************/
+.management-search {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
 }
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+}
+
+#search-management {
+    width: 100%;
+    padding: 15px 30px;
+    font-size: 16px;
+    border: 1px solid #5c5959;
+    border-radius: 15px;
+    outline: none;
+    padding-left: 35px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+#search-management:hover {
+    border-color: #0077ff; 
+    box-shadow: 0 0 8px rgba(0, 119, 255, 0.3); 
+}
+
+#search-management:focus {
+    border-color: #000000;
+    box-shadow: 0 0 12px rgba(0, 119, 255, 0.5); 
+}
+
+#search-management::placeholder {
+    color: #999;
+    font-weight: bold;
+}
+
+.search-container i {
+    position: absolute;
+    left: 10px;
+    font-size: 30px;
+    color: #0077ff;
+    transition: color 0.3s ease; 
+}
+
+.search-container:hover i {
+    color: #005bb5; 
+}
+
+/*******************POP UP FOR ADD USER***********************/

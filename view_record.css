@@ -13,10 +13,15 @@ body {
 .modal-container {
     background: white;
     padding: 20px;
-    max-width: 600px;
-    margin: auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
+    width: 90%; 
+    height: 90vh; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border-radius: 0; 
+    position: fixed; 
+    top: 30px;
+    left: 70px;
+    overflow: auto;
+    border-radius: 20px; 
 }
 
 .section-header {
@@ -29,7 +34,7 @@ body {
 .info {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
+    padding: 15px 0;
     border-bottom: 1px solid #ddd;
 }
 
@@ -47,10 +52,15 @@ body {
 }
 
 .close-button {
-    margin-left: 570px;
-    font-size: 30px;
+    position: absolute; 
+    top: 15px;
+    right: 30px; 
+    font-size: 40px;
     color: gray;
     cursor: pointer;
+    background: none; 
+    border: none; 
+    padding: 0; 
 }
 
 .close-button:hover {

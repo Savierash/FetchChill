@@ -94,6 +94,18 @@ if (!empty($search)) {
     }
 }
 
+// Fetch admin from the database
+$stmt = $conn->prepare("SELECT * FROM admin");
+if ($stmt) {
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $users = $result->fetch_all(MYSQLI_ASSOC);
+    $stmt->close();
+} else {
+    $_SESSION['error_message'] = "Error preparing SQL statement: " . $conn->error;
+    $users = [];
+}
+
 // Display success and error messages
 if (isset($_SESSION['success_message'])) {
     echo "<div id='successMessage' style='background-color: #4CAF50; color: white; padding: 10px; text-align: center;'>
@@ -326,8 +338,8 @@ $conn->close();
             <table class="med-form">
         <thead>
             <tr>
-                <th>Owner Name</th>
-                <th>Action</th>
+                <th class="med-heading">Owner Name</th>
+                <th class="med-heading">Action</th>
             </tr>
         </thead>
         <tbody id="medical-list">
@@ -351,39 +363,41 @@ $conn->close();
     </table>
 </div>
 
+
+
         <!------------------ User Management ---------------------->
         <div id="userManagement" class="management-container" style="display:none;">
-            <h1>User Management</h1>
-            <div class="profile-container">
-                <div class="profile-card">
-                    <div class="profile-picture">
-                        <img src="img/default-profile.png" alt="Profile Picture">
-                    </div>
-                    <div class="profile-info">
-                        <h2><?php echo htmlspecialchars($user['username'] ?? 'Unknown'); ?></h2>
-                        <p class="role"><?php echo htmlspecialchars($user['role'] ?? 'Admin'); ?></p>
-                    </div>
-                </div>
-            </div>
-            <div class="personal-info-container">
-                <h2>Personal Information</h2>
-                <div class="info-section">
-                    <div class="info-item">
-                        <label>Username:</label>
-                        <span>johndoe123</span>
-                    </div>
-                    <div class="info-item">
-                        <label>Email:</label>
-                        <span>johndoe@example.com</span>
-                    </div>
-                    <div class="info-item">
-                        <label>User Role:</label>
-                        <span>Admin</span>
-                    </div>
-                </div>
-            </div>
+    <h1>User Management</h1>
+    <div class="management-search">
+        <div class="search-container">
+            <i class='bx bx-search'></i>
+            <input type="text" id="search-management" placeholder="Search your user..." onkeyup="searchUsers()">
         </div>
     </div>
+
+    
+    <table>
+        <thead>
+            <tr>
+                <th class="tablehead">Name</th>
+                <th class="tablehead">Email</th>
+                <th class="tablehead">Role</th>
+                <th class="tablehead">Remove Account</th>
+            </tr>
+        </thead>
+        <tbody id="user-list">
+            <?php foreach ($users as $user): ?>
+                <tr>
+                    <td class="tabledata"><?php echo htmlspecialchars($user['username']); ?></td>
+                    <td class="tabledata"><?php echo htmlspecialchars($user['email']); ?></td>
+                    <td class="tabledata"><?php echo htmlspecialchars($user['role']); ?></td>
+                    <td class="tabledata">
+                        <button class="delete-button" onclick="deleteUser(<?php echo $user['id']; ?>)">Delete</button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
 
 

@@ -63,7 +63,8 @@ $conn->close();
 <div class="modal-container">
         <span class="close-button" onclick="window.history.back();">&times;</span>
 
-        <div class="section-header">Owner Name: <?php echo htmlspecialchars($record['ownername']); ?></div>
+        <div class="section-header">Medical Information </div>
+        <div class="info"><span class="label">Owner Name:</span> <span class="value"><?php echo htmlspecialchars($record['ownername']); ?></div>
         <div class="info"><span class="label">Pet Name:</span> <span class="value"><?php echo htmlspecialchars($record['petname']); ?></span></div>
         <div class="info"><span class="label">Pet Type:</span> <span class="value"><?php echo htmlspecialchars($record['petType']); ?></span></div>
         <div class="info"><span class="label">Breed:</span> <span class="value"><?php echo htmlspecialchars($record['breed']); ?></span></div>
