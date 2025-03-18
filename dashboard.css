@@ -195,7 +195,7 @@ body {
     border-radius: 3px;
 }
 .notification-list {
-    max-height: 200px;
+    max-height: 300px;
     overflow-y: auto;
 }
 .notification-item {

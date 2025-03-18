@@ -3,15 +3,11 @@ session_start();
 include 'pet_connection.php'; 
 require 'Appointment.php'; 
 
-// Create an instance of the Appointment class
 $appointment = new Appointment();
 
-// Fetch all appointments using the Appointment class
 $appointments = $appointment->GetAllAppointments();
 
-// Handle form submission for medical records
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Sanitize and validate input data
     $ownername = htmlspecialchars($_POST['ownerName'] ?? '');
     $petname = htmlspecialchars($_POST['petName'] ?? '');
     $petType = htmlspecialchars($_POST['petType'] ?? '');
@@ -26,14 +22,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $diagnosis = htmlspecialchars($_POST['diagnosis'] ?? '');
     $treatment = htmlspecialchars($_POST['treatment'] ?? '');
 
-    // Validate required fields
     if (empty($ownername) || empty($petname) || empty($petType) || empty($breed) || empty($weight) || empty($age) || empty($gender) || empty($visitdate) || empty($time) || empty($diagnosis) || empty($treatment)) {
         $_SESSION['error_message'] = "Error: Missing required fields!";
         header("Location: dashboard.php");
         exit();
     }
 
-    // Prepare and execute SQL statement
     $sql = "INSERT INTO petrecords (ownername, petname, petType, breed, weight, age, gender, visitdate, time, vaccine, veterinarian, diagnosis, treatment) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
@@ -56,7 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Handle search
 $search = isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '';
 
-// Fetch records based on search term
 if (!empty($search)) {
     $sql = "SELECT * FROM petrecords WHERE ownername LIKE ?";
     $stmt = $conn->prepare($sql);
@@ -76,7 +69,7 @@ if (!empty($search)) {
         $records = [];
     }
 } else {
-    // Fetch all records if no search term is provided
+    // Fetch all records
     $sql = "SELECT * FROM petrecords";
     $stmt = $conn->prepare($sql);
     if ($stmt) {
@@ -94,7 +87,7 @@ if (!empty($search)) {
     }
 }
 
-// Fetch admin from the database
+// Fetch admin 
 $stmt = $conn->prepare("SELECT * FROM admin");
 if ($stmt) {
     $stmt->execute();

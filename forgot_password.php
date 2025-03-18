@@ -1,50 +1,71 @@
 <?php
-// Include the database connection
-require_once 'db_connection.php'; 
-
+require_once 'db_connection.php';
 session_start();
 
-function showError($message) {
-    return "<p class='error-message'>$message</p>";
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $_POST['email'];
+function showMessage($message, $type = 'danger') {
+    return "<div class='alert alert-$type'>" . htmlspecialchars($message) . "</div>";
+}
 
-    if (empty($email)) {
-        $error_message = showError("Please enter the admin's email.");
-    } else {
-        
-        $stmt = $conn->prepare("SELECT * FROM admin WHERE email = ?"); 
-        $stmt->bind_param('s', $email); // 's' for string
-        $stmt->execute();
-        $result = $stmt->get_result();
+function sendResetEmail($email, $token) {
+    $reset_link = "http://localhost/FetchChill/reset_password.php?token=" . urlencode($token);
+    $subject = "Password Reset Request";
+    $message = "Click this link to reset your password: $reset_link\nLink expires in 1 hour.";
+    $headers = "From: your_email@gmail.com\r\n" .
+               "Reply-To: your_email@gmail.com\r\n" .
+               "X-Mailer: PHP/" . phpversion();
 
-        if ($result->num_rows > 0) {
-           
-            $admin = $result->fetch_assoc(); 
-            $token = bin2hex(random_bytes(50));
+    $result = mail($email, $subject, $message, $headers);
+    if (!$result) {
+        error_log("Failed to send email to $email");
+    }
+    return $result;
+}
 
-            
-            $stmt = $conn->prepare("UPDATE admin SET reset_token = ? WHERE email = ?"); 
-            $stmt->bind_param('ss', $token, $email);
-            $stmt->execute();
-
-            echo "Password reset token for admin: $token"; 
-
-        } else {
-            $error_message = showError("Admin email not found.");
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            throw new Exception("Security error: Invalid token");
         }
 
-        // Close the statement
-        $stmt->close();
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error = showMessage("Please enter a valid email address.");
+        } else {
+            $stmt = $conn->prepare("SELECT * FROM admin WHERE email = ?");
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows > 0) {
+                $token = bin2hex(random_bytes(50));
+                $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+                $update_stmt = $conn->prepare("UPDATE admin SET reset_token = ?, token_expiry = ? WHERE email = ?");
+                $update_stmt->bind_param('sss', $token, $expiry, $email);
+                
+                if (!$update_stmt->execute()) {
+                    throw new Exception("Database update failed: " . $update_stmt->error);
+                }
+                if (!sendResetEmail($email, $token)) {
+                    throw new Exception("Failed to send reset email");
+                }
+                $success = showMessage("Reset link sent to your email.", "success");
+                
+                $update_stmt->close();
+            } else {
+                $error = showMessage("Email not found in our system.");
+            }
+            $stmt->close();
+        }
+    } catch (Exception $e) {
+        $error = showMessage("Error: " . $e->getMessage());
     }
 }
-
-// Close the connection
-$conn->close();
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -59,35 +80,27 @@ $conn->close();
 <div class="container">
     <div class="signin-signup">
         <div class="classleft">
-
-        <!-- Back Button -->
-        <button class="back-btn" onclick="history.back()">
-            <i class='bx bx-arrow-back'></i>
-        </button>
-
+            <button class="back-btn" onclick="history.back()">
+                <i class='bx bx-arrow-back'></i>
+            </button>
             <form action="forgot_password.php" method="POST" class="forgot-password-form">
                 <h2 class="title">Forgot Password</h2>
-
-                <!-- Displaying error message if it exists -->
-                <?php if (isset($error_message)) echo $error_message; ?>
-
+                <?php echo $success ?? $error ?? ''; ?>
+                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
                 <div class="input-field">
                     <i class='bx bxs-envelope'></i>
                     <input type="email" name="email" placeholder="Enter your email" required />
                 </div>
-
                 <input type="submit" value="Reset Password" class="btn solid" />
-
             </form>
         </div>
-
         <div class="classright">
             <img src="img/undraw_forgot-password_odai.svg" class="image" alt="Forgot Password Illustration" />
         </div>
     </div>
 </div>
-
-
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
+
+<?php $conn->close(); ?>

@@ -70,6 +70,7 @@ function markAsRead(element) {
 }
 
 
+
 //////////////////////////DASHBOARD
 
 
@@ -146,16 +147,14 @@ function updateStatus(appointmentId, newStatus) {
 function filterAppointments(filter) {
     console.log("Filtering appointments by:", filter);
 
-    // Kunin ang lahat ng appointment rows
     const rows = document.querySelectorAll('tr[data-status]');
 
-    // I-loop ang bawat row at i-toggle ang visibility batay sa filter
     rows.forEach(row => {
         const status = row.getAttribute('data-status').toLowerCase();
         if (filter === 'all' || status === filter) {
-            row.style.display = ''; // Ipakita ang row
+            row.style.display = ''; 
         } else {
-            row.style.display = 'none'; // Itago ang row
+            row.style.display = 'none'; 
         }
     });
 }
@@ -278,22 +277,12 @@ function searchMedicals() {
 }
 
 //timer for success meassage
-function hideMessage(elementId, delay) {
-    setTimeout(function() {
-        var element = document.getElementById(elementId);
-        if (element) {
-            element.style.display = 'none';
-        }
-    }, delay);
-}
-
-if (document.getElementById('successMessage')) {
-    hideMessage('successMessage', 3000);
-}
-
-if (document.getElementById('errorMessage')) {
-    hideMessage('errorMessage', 3000);
-}
+setTimeout(function() {
+    var successMessage = document.getElementById('successMessage');
+    var errorMessage = document.getElementById('errorMessage');
+    if (successMessage) successMessage.style.display = 'none';
+    if (errorMessage) errorMessage.style.display = 'none';
+}, 3000);
 
 
 //pop up add medical records
