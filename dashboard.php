@@ -1,10 +1,10 @@
 <?php
 session_start();
 include 'pet_connection.php'; 
+
+//for appointment part
 require 'Appointment.php'; 
-
 $appointment = new Appointment();
-
 $appointments = $appointment->GetAllAppointments();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
