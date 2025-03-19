@@ -21,8 +21,7 @@ CREATE TABLE admin (
 ALTER TABLE admin ADD COLUMN role ENUM('Admin', 'Staff') NOT NULL DEFAULT 'Admin';
 
 <!--sample admin account -->
-INSERT INTO `admin`(`id`, `username`, `password`, `email`, `created_at`) VALUES ('1','suniga','admin','suniga@example.com','1;00pm','admin')
-INSERT INTO `admin`(`id`, `username`, `password`, `email`, `created_at`) VALUES ('2','april','admin','april@example.com','1;00pm','admin')
+INSERT INTO `admin`(`id`, `username`, `password`, `email`, `created_at`, `role`, `reset_token`, `reset_token_expires`, `token_expiry`) VALUES ('','suniga','ako toh eh','suniga@example.com','','admin','','','');
 
 
 <!-- Create a database -->
