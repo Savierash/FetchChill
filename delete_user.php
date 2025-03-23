@@ -1,27 +1,22 @@
 <?php
-session_start();
-include 'pet_connection.php'; 
+require_once 'pet_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $userId = $_POST['id']; 
-
-   
-    $sql = "DELETE FROM admin WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    if ($stmt) {
-        $stmt->bind_param("i", $userId); 
+    $id = $_POST['id'] ?? null;
+    
+    if ($id) {
+        $stmt = $conn->prepare("DELETE FROM admin WHERE id = ?");
+        $stmt->bind_param('i', $id);
+        
         if ($stmt->execute()) {
-            $_SESSION['success_message'] = "User deleted successfully!";
+            http_response_code(200);
         } else {
-            $_SESSION['error_message'] = "Error deleting user: " . $stmt->error;
+            http_response_code(500);
         }
         $stmt->close();
     } else {
-        $_SESSION['error_message'] = "Error preparing SQL statement: " . $conn->error;
+        http_response_code(400);
     }
-
-   
-    header("Location: dashboard.php");
-    exit();
 }
+$conn->close();
 ?>

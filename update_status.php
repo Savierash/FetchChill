@@ -1,47 +1,37 @@
 <?php
-header('Content-Type: application/json'); // Ensure the response is JSON
+require_once 'pet_connection.php';
 
-// Kunin ang input data
-$input = json_decode(file_get_contents('php://input'), true);
-$appointmentId = $input['id'] ?? null;
-$newStatus = $input['status'] ?? null;
+header('Content-Type: application/json');
 
-if (!$appointmentId || !$newStatus) {
-    http_response_code(400); // Bad request
-    echo json_encode(['success' => false, 'message' => 'Invalid input']);
-    exit;
+try {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $ids = $data['ids'] ?? [];
+    $status = $data['status'] ?? '';
+
+    if (empty($ids) || !in_array($status, ['Confirmed', 'Cancelled'])) {
+        throw new Exception('Invalid input');
+    }
+
+    $placeholders = implode(',', array_fill(0, count($ids), '?'));
+    $sql = "UPDATE appointments SET status = ? WHERE id IN ($placeholders)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        throw new Exception("Prepare failed: " . $conn->error);
+    }
+
+    $types = 's' . str_repeat('i', count($ids)); // 's' for status, 'i' for each ID
+    $stmt->bind_param($types, $status, ...$ids);
+
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        throw new Exception("Execution failed: " . $stmt->error);
+    }
+
+    $stmt->close();
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
 
-// I-connect sa MySQL database
-$mysqli = new mysqli('localhost', 'root', '', 'fetch_chill_db');
-
-// I-check ang connection
-if ($mysqli->connect_error) {
-    http_response_code(500); // Internal server error
-    echo json_encode(['success' => false, 'message' => 'Database connection failed']);
-    exit;
-}
-
-// Gumawa ng prepared statement para i-update ang status
-$stmt = $mysqli->prepare("UPDATE appointments SET status = ? WHERE id = ?");
-if (!$stmt) {
-    http_response_code(500); // Internal server error
-    echo json_encode(['success' => false, 'message' => 'Failed to prepare statement']);
-    exit;
-}
-
-// I-bind ang mga parameter
-$stmt->bind_param('si', $newStatus, $appointmentId);
-
-// I-execute ang query
-if ($stmt->execute()) {
-    echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
-} else {
-    http_response_code(500); // Internal server error
-    echo json_encode(['success' => false, 'message' => 'Failed to update status']);
-}
-
-// Isara ang statement at connection
-$stmt->close();
-$mysqli->close();
+$conn->close();
 ?>
