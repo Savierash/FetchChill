@@ -4,123 +4,155 @@ ini_set('display_errors', 1);
 session_start();
 require_once 'pet_connection.php';
 
-// Check database connection
+// Validate database connection
 if (!isset($conn) || !$conn) {
-    die("Database connection failed");
+    die("Database connection failed: " . (isset($conn) ? $conn->connect_error : "No connection object"));
 }
+
+// Check if petrecords table exists
+$table_check = $conn->query("SHOW TABLES LIKE 'petrecords'");
+if ($table_check->num_rows == 0) {
+    die("Error: 'petrecords' table does not exist in the database");
+}
+
 require_once 'Appointment.php';
 
 try {
-    // Initialize Appointment class and fetch appointments
     $appointment = new Appointment();
     $appointments = $appointment->GetAllAppointments();
 
-    // Handle POST request for medical records
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        $ownername = filter_input(INPUT_POST, 'ownerName', FILTER_SANITIZE_SPECIAL_CHARS);
-        $petname = filter_input(INPUT_POST, 'petName', FILTER_SANITIZE_SPECIAL_CHARS);
-        $petType = filter_input(INPUT_POST, 'petType', FILTER_SANITIZE_SPECIAL_CHARS);
-        $breed = filter_input(INPUT_POST, 'breed', FILTER_SANITIZE_SPECIAL_CHARS);
-        $weight = filter_input(INPUT_POST, 'weight', FILTER_VALIDATE_FLOAT);
-        $age = filter_input(INPUT_POST, 'age', FILTER_VALIDATE_INT);
-        $gender = filter_input(INPUT_POST, 'gender', FILTER_SANITIZE_SPECIAL_CHARS);
-        $visitdate = filter_input(INPUT_POST, 'checkupDate', FILTER_SANITIZE_SPECIAL_CHARS);
-        $time = filter_input(INPUT_POST, 'time', FILTER_SANITIZE_SPECIAL_CHARS);
-        $vaccine = filter_input(INPUT_POST, 'vaccine', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N/A';
-        $veterinarian = filter_input(INPUT_POST, 'veterinarian', FILTER_SANITIZE_SPECIAL_CHARS) ?? 'N/A';
-        $diagnosis = filter_input(INPUT_POST, 'diagnosis', FILTER_SANITIZE_SPECIAL_CHARS);
-        $treatment = filter_input(INPUT_POST, 'treatment', FILTER_SANITIZE_SPECIAL_CHARS);
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $ownername = htmlspecialchars($_POST['ownerName'] ?? '');
+        $petname = htmlspecialchars($_POST['petName'] ?? '');
+        $petType = htmlspecialchars($_POST['petType'] ?? '');
+        $breed = htmlspecialchars($_POST['breed'] ?? '');
+        $weight = intval($_POST['weight'] ?? 0);
+        $age = intval($_POST['age'] ?? 0);
+        $gender = htmlspecialchars($_POST['gender'] ?? '');
+        $visitdate = htmlspecialchars($_POST['checkupDate'] ?? '');
+        $time = htmlspecialchars($_POST['time'] ?? '');
+        $vaccine = htmlspecialchars($_POST['vaccine'] ?? '');
+        $veterinarian = htmlspecialchars($_POST['veterinarian'] ?? '');
+        $diagnosis = htmlspecialchars($_POST['diagnosis'] ?? '');
+        $treatment = htmlspecialchars($_POST['treatment'] ?? '');
 
-        // Validate required fields
-        $requiredFields = [$ownername, $petname, $petType, $breed, $weight, $age, $gender, $visitdate, $time, $diagnosis, $treatment];
-        if (in_array(null, $requiredFields, true) || in_array('', $requiredFields, true)) {
-            throw new Exception("Missing required fields!");
+        if (empty($ownername) || empty($petname) || empty($breed) || empty($weight) || empty($age) || empty($gender) || empty($visitdate) || empty($time) || empty($diagnosis) || empty($treatment)) {
+            $_SESSION['error_message'] = "Error: Missing required fields!";
+            header("Location: dashboard.php"); 
+            exit();
         }
 
-        $stmt = $conn->prepare("INSERT INTO petrecords (ownername, petname, pet_type, breed, weight, age, gender, visitdate, visit_time, vaccine, veterinarian, diagnosis, treatment) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        if (!$stmt) {
-            throw new Exception("Prepare failed: " . $conn->error);
-        }
-        
-        $stmt->bind_param("ssssdisssssss", $ownername, $petname, $petType, $breed, $weight, $age, $gender, $visitdate, $time, $vaccine, $veterinarian, $diagnosis, $treatment);
-        
-        if ($stmt->execute()) {
-            $_SESSION['success_message'] = "Record added successfully!";
+        $sql = "INSERT INTO petrecords (ownername, petname, petType, breed, weight, age, gender, visitdate, time, vaccine, veterinarian, diagnosis, treatment) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param("ssssiisssssss", $ownername, $petname, $petType, $breed, $weight, $age, $gender, $visitdate, $time, $vaccine, $veterinarian, $diagnosis, $treatment);
+
+            if ($stmt->execute()) {
+                $_SESSION['success_message'] = "Record added successfully!";
+            } else {
+                $_SESSION['error_message'] = "Error adding record: " . $stmt->error;
+            }
+            $stmt->close();
         } else {
-            throw new Exception("Execution failed: " . $stmt->error);
+            $_SESSION['error_message'] = "Error preparing SQL statement: " . $conn->error;
         }
-        $stmt->close();
+
         header("Location: dashboard.php");
         exit();
     }
-
-    // Fetch recent appointments (last 5)
-    $stmt = $conn->prepare("SELECT * FROM appointments ORDER BY appointment_date DESC LIMIT 5");
-    $stmt->execute();
-    $recentAppointments = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-
-    // Fetch recent medical records (last 5)
-    $stmt = $conn->prepare("SELECT * FROM petrecords ORDER BY visitdate DESC LIMIT 5");
-    $stmt->execute();
-    $recentRecords = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-
-    // Handle search for medical records
-    $search = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
-    $sql = $search ?
-        "SELECT * FROM petrecords WHERE ownername LIKE ?" :
-        "SELECT * FROM petrecords";
-    
-    $stmt = $conn->prepare($sql);
-    if (!$stmt) {
-        throw new Exception("Prepare failed: " . $conn->error);
-    }
-    
-    if ($search) {
-        $searchTerm = "%$search%";
-        $stmt->bind_param("s", $searchTerm);
-    }
-    
-    $stmt->execute();
-    $searchResults = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-
-    // Fetch admin data
-    $users = [];
-    $stmt = $conn->prepare("SELECT * FROM admin");
-    if (!$stmt) {
-        throw new Exception("Prepare failed: " . $conn->error);
-    }
-    $stmt->execute();
-    $users = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-
-    // Appointment counts with prepared statements
-    $counts = [];
-    foreach (['Confirmed', 'Cancelled', 'Pending'] as $status) {
-        $stmt = $conn->prepare("SELECT COUNT(*) as count FROM appointments WHERE status = ?");
-        $stmt->bind_param("s", $status);
-        $stmt->execute();
-        $counts[strtolower($status)] = $stmt->get_result()->fetch_assoc()['count'];
-        $stmt->close();
-    }
-
 } catch (Exception $e) {
     error_log("Error: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
     $_SESSION['error_message'] = "Error: " . $e->getMessage();
+    header("Location: dashboard.php");
+    exit();
 }
 
-// Display messages
-$messageHtml = '';
+// Display messages directly instead of using $messageHtml
 if (isset($_SESSION['success_message'])) {
-    $messageHtml .= "<div class='message success'>{$_SESSION['success_message']}</div>";
+    echo "<div class='message success'>{$_SESSION['success_message']}</div>";
     unset($_SESSION['success_message']);
 }
+
 if (isset($_SESSION['error_message'])) {
-    $messageHtml .= "<div class='message error'>{$_SESSION['error_message']}</div>";
+    echo "<div class='message error'>{$_SESSION['error_message']}</div>";
     unset($_SESSION['error_message']);
+}
+
+try {
+    // Fetch all records
+    $records = [];
+    $stmt = $conn->prepare("SELECT * FROM petrecords");
+    if ($stmt) {
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $records = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+    }
+
+    // Fetch recent appointments
+    $recentAppointments = [];
+    $stmt = $conn->prepare("SELECT * FROM appointments ORDER BY appointment_date DESC LIMIT 5");
+    if ($stmt) {
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $recentAppointments = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+    }
+
+    // Fetch recent records
+    $recentRecords = [];
+    $stmt = $conn->prepare("SELECT * FROM petrecords ORDER BY visitdate DESC LIMIT 5");
+    if ($stmt) {
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $recentRecords = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+    }
+
+    // Search functionality
+    $search = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+    $searchResults = [];
+    if ($search) {
+        $sql = "SELECT * FROM petrecords WHERE ownername LIKE ?";
+        $stmt = $conn->prepare($sql);
+        if ($stmt) {
+            $searchTerm = "%$search%";
+            $stmt->bind_param("s", $searchTerm);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $searchResults = $result->fetch_all(MYSQLI_ASSOC);
+            $stmt->close();
+        }
+    } else {
+        $searchResults = $records; // Use all records if no search term
+    }
+
+    // User management data
+    $users = [];
+    $stmt = $conn->prepare("SELECT * FROM admin");
+    if ($stmt) {
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $users = $result->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+    }
+
+    // Appointment counts by status
+    $counts = ['confirmed' => 0, 'cancelled' => 0, 'pending' => 0];
+    foreach (['Confirmed', 'Cancelled', 'Pending'] as $status) {
+        $stmt = $conn->prepare("SELECT COUNT(*) as count FROM appointments WHERE status = ?");
+        if ($stmt) {
+            $stmt->bind_param("s", $status);
+            $stmt->execute();
+            $result = $stmt->get_result()->fetch_assoc();
+            $counts[strtolower($status)] = $result['count'];
+            $stmt->close();
+        }
+    }
+} catch (Exception $e) {
+    error_log("Error: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
+    $_SESSION['error_message'] = "Error: " . $e->getMessage();
 }
 
 $conn->close();
@@ -1096,8 +1128,6 @@ th {
 
 </style>
 <body>
-    <?php echo $messageHtml; ?>
-    
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
@@ -1117,12 +1147,11 @@ th {
 
         <!-- Main Content -->
         <div class="content">
+            <!-- Notification Bell and Dropdown (unchanged) -->
             <div class="notification-bell" onclick="toggleDropdown()">
                 <i class='bx bxs-bell'></i>
                 <span class="badge" id="notifCount">3</span>
             </div>
-
-            <!-- Notification Dropdown -->
             <div id="notifDropdown" class="notification-dropdown">
                 <div class="notification-header">Notifications</div>
                 <hr>
@@ -1279,7 +1308,6 @@ th {
                     <div class="popup-content">
                         <button class="close-btn" onclick="closePopup()">×</button>
                         <h2 id="popupTitle">Add Client Record</h2>
-                        
                         <form action="dashboard.php" method="POST" id="medicalForm" class="medic-form">
                             <div class="form-group">
                                 <label for="ownerName">Owner Name:</label>
@@ -1403,29 +1431,24 @@ th {
     </div>
 
     <script>
-        // Your existing JavaScript remains largely unchanged, with the medical form handler updated
+        // JavaScript remains largely unchanged, with updated medical form handling
         function changeContent(sectionId) {
             const sections = document.querySelectorAll('.content-section');
             sections.forEach(section => section.style.display = 'none');
+            document.getElementById(sectionId).style.display = 'block';
             
-            const selectedSection = document.getElementById(sectionId);
-            if (selectedSection) {
-                selectedSection.style.display = 'block';
-                
-                const sectionMap = {
-                    'dashboard': 'Dashboard',
-                    'appointments': 'Appointments',
-                    'medicalRecords': 'Medical Records',
-                    'userManagement': 'User Management'
-                };
-
-                document.querySelectorAll('.menu li').forEach(li => {
-                    li.classList.remove('active');
-                    if (li.textContent.trim() === sectionMap[sectionId]) {
-                        li.classList.add('active');
-                    }
-                });
-            }
+            const sectionMap = {
+                'dashboard': 'Dashboard',
+                'appointments': 'Appointments',
+                'medicalRecords': 'Medical Records',
+                'userManagement': 'User Management'
+            };
+            document.querySelectorAll('.menu li').forEach(li => {
+                li.classList.remove('active');
+                if (li.textContent.trim() === sectionMap[sectionId]) {
+                    li.classList.add('active');
+                }
+            });
         }
 
         function toggleDropdown() {
@@ -1436,7 +1459,6 @@ th {
         function handleNotificationFilter() {
             const unreadBtn = document.getElementById('unreadBtn');
             const allBtn = document.getElementById('allBtn');
-            
             unreadBtn.addEventListener('click', () => {
                 unreadBtn.classList.add('active');
                 allBtn.classList.remove('active');
@@ -1444,7 +1466,6 @@ th {
                     item.style.display = item.classList.contains('unread') ? 'block' : 'none';
                 });
             });
-
             allBtn.addEventListener('click', () => {
                 allBtn.classList.add('active');
                 unreadBtn.classList.remove('active');
@@ -1473,18 +1494,14 @@ th {
                 alert('No appointments selected.');
                 return;
             }
-
             if (!confirm(`Are you sure you want to mark ${appointmentIds.length} appointment(s) as ${newStatus}?`)) return;
-
             try {
                 const response = await fetch('update_status.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ ids: appointmentIds, status: newStatus })
                 });
-
                 if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                
                 const data = await response.json();
                 if (data.success) {
                     appointmentIds.forEach(id => {
@@ -1510,20 +1527,17 @@ th {
             const selectAll = document.getElementById('select-all');
             const confirmAll = document.getElementById('confirm-all');
             const cancelAll = document.getElementById('cancel-all');
-
             selectAll.addEventListener('change', () => {
                 document.querySelectorAll('input[name="select_appointment"]').forEach(cb => {
                     cb.checked = selectAll.checked;
                 });
             });
-
             confirmAll.addEventListener('click', () => {
                 const checkedBoxes = document.querySelectorAll('input[name="select_appointment"]:checked');
                 const ids = Array.from(checkedBoxes).map(cb => cb.value);
                 if (ids.length > 0) updateStatus(ids, 'Confirmed');
                 else alert('Please select at least one appointment to confirm.');
             });
-
             cancelAll.addEventListener('click', () => {
                 const checkedBoxes = document.querySelectorAll('input[name="select_appointment"]:checked');
                 const ids = Array.from(checkedBoxes).map(cb => cb.value);
@@ -1553,7 +1567,6 @@ th {
             const petType = document.getElementById("petType").value;
             const breedSelect = document.getElementById("breed");
             breedSelect.innerHTML = '<option value="">Select a breed</option>';
-
             const breeds = {
                 Dog: ["Labrador Retriever", "German Shepherd", "Golden Retriever", "Bulldog", "Beagle", 
                       "Poodle", "Rottweiler", "Shih Tzu", "Siberian Husky", "Chihuahua", "Pug", 
@@ -1562,7 +1575,6 @@ th {
                       "Scottish Fold", "British Shorthair", "Abyssinian", "Russian Blue", 
                       "Siberian", "Norwegian Forest Cat"]
             };
-
             (breeds[petType] || []).forEach(breed => {
                 const option = document.createElement("option");
                 option.value = breed;
@@ -1586,16 +1598,13 @@ th {
         function handleMedicalForm() {
             document.getElementById('medicalForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
                 try {
                     const formData = new FormData(e.target);
                     const response = await fetch('dashboard.php', {
                         method: 'POST',
                         body: formData
                     });
-                    
                     if (!response.ok) throw new Error('Form submission failed');
-                    
                     closePopup();
                     const medicalResponse = await fetch('dashboard.php');
                     const html = await medicalResponse.text();
@@ -1623,23 +1632,19 @@ th {
             const searchTerm = document.getElementById('search-management').value.toLowerCase();
             const rows = document.querySelectorAll('#user-list tr');
             rows.forEach(row => {
-                const text = Array.from(row.cells).slice(0, 3)
-                    .map(cell => cell.textContent.toLowerCase())
-                    .join(' ');
+                const text = Array.from(row.cells).slice(0, 3).map(cell => cell.textContent.toLowerCase()).join(' ');
                 row.style.display = text.includes(searchTerm) ? '' : 'none';
             });
         }
 
         async function deleteUser(userId) {
             if (!confirm('Are you sure you want to delete this user?')) return;
-
             try {
                 const response = await fetch('delete_user.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: `id=${userId}`
                 });
-                
                 if (!response.ok) throw new Error('Delete failed');
                 location.reload();
             } catch (error) {
@@ -1654,7 +1659,6 @@ th {
                     li.classList.add('active');
                 }
             });
-
             document.addEventListener('click', (e) => {
                 const dropdown = document.getElementById('notifDropdown');
                 const bell = document.querySelector('.notification-bell');
@@ -1662,12 +1666,10 @@ th {
                     dropdown.style.display = 'none';
                 }
             });
-            
             handleNotificationFilter();
             updateNotificationCount();
             handleMedicalForm();
             handleBulkActions();
-            
             setTimeout(() => {
                 document.querySelectorAll('.message').forEach(msg => msg.style.display = 'none');
             }, 3000);

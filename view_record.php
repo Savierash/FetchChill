@@ -141,8 +141,8 @@ body {
 
         <div class="section-header">Medical Information</div>
         <div class="info"><span class="label">Owner Name:</span> <span class="value"><?php echo htmlspecialchars($record['ownername']); ?></span></div>
-        <div class="info"><span class="label">Pet Name:</span> <span class="value"><?php echo htmlspecialchars($record['petName']); ?></span></div>
-        <div class="info"><span class="label">Pet Type:</span> <span class="value"><?php echo htmlspecialchars($record['petNype']); ?></span></div>
+        <div class="info"><span class="label">Pet Name:</span> <span class="value"><?php echo htmlspecialchars($record['petname']); ?></span></div>
+        <div class="info"><span class="label">Pet Type:</span> <span class="value"><?php echo htmlspecialchars($record['petType']); ?></span></div>
         <div class="info"><span class="label">Breed:</span> <span class="value"><?php echo htmlspecialchars($record['breed']); ?></span></div>
         <div class="info"><span class="label">Weight:</span> <span class="value"><?php echo htmlspecialchars($record['weight']); ?> kg</span></div>
         <div class="info"><span class="label">Gender:</span> <span class="value"><?php echo htmlspecialchars($record['gender']); ?></span></div>
