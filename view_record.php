@@ -142,7 +142,7 @@ body {
         <div class="section-header">Medical Information</div>
         <div class="info"><span class="label">Owner Name:</span> <span class="value"><?php echo htmlspecialchars($record['ownername']); ?></span></div>
         <div class="info"><span class="label">Pet Name:</span> <span class="value"><?php echo htmlspecialchars($record['petname']); ?></span></div>
-        <div class="info"><span class="label">Pet Type:</span> <span class="value"><?php echo htmlspecialchars($record['petType']); ?></span></div>
+        <div class="info"><span class="label">Pet Type:</span> <span class="value"><?php echo htmlspecialchars($record['pet_type']); ?></span></div>
         <div class="info"><span class="label">Breed:</span> <span class="value"><?php echo htmlspecialchars($record['breed']); ?></span></div>
         <div class="info"><span class="label">Weight:</span> <span class="value"><?php echo htmlspecialchars($record['weight']); ?> kg</span></div>
         <div class="info"><span class="label">Gender:</span> <span class="value"><?php echo htmlspecialchars($record['gender']); ?></span></div>
@@ -157,7 +157,7 @@ body {
 
         <div class="section-header">Date & Time</div>
         <div class="info"><span class="label">Date:</span> <span class="value"><?php echo htmlspecialchars($record['visitdate']); ?></span></div>
-        <div class="info"><span class="label">Time:</span> <span class="value"><?php echo htmlspecialchars($record['time']); ?></span></div>
+        <div class="info"><span class="label">Time:</span> <span class="value"><?php echo htmlspecialchars($record['checkup_time']); ?></span></div>
     </div>
 </body>
 </html>

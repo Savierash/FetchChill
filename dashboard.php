@@ -1,6 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 session_start();
 require_once 'pet_connection.php';
 
@@ -21,74 +19,48 @@ try {
     $appointment = new Appointment();
     $appointments = $appointment->GetAllAppointments();
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $ownername = htmlspecialchars($_POST['ownerName'] ?? '');
-        $petname = htmlspecialchars($_POST['petName'] ?? '');
-        $petType = htmlspecialchars($_POST['petType'] ?? '');
-        $breed = htmlspecialchars($_POST['breed'] ?? '');
-        $weight = intval($_POST['weight'] ?? 0);
-        $age = intval($_POST['age'] ?? 0);
-        $gender = htmlspecialchars($_POST['gender'] ?? '');
-        $visitdate = htmlspecialchars($_POST['checkupDate'] ?? '');
-        $time = htmlspecialchars($_POST['time'] ?? '');
-        $vaccine = htmlspecialchars($_POST['vaccine'] ?? '');
-        $veterinarian = htmlspecialchars($_POST['veterinarian'] ?? '');
-        $diagnosis = htmlspecialchars($_POST['diagnosis'] ?? '');
-        $treatment = htmlspecialchars($_POST['treatment'] ?? '');
-
-        if (empty($ownername) || empty($petname) || empty($breed) || empty($weight) || empty($age) || empty($gender) || empty($visitdate) || empty($time) || empty($diagnosis) || empty($treatment)) {
-            $_SESSION['error_message'] = "Error: Missing required fields!";
-            header("Location: dashboard.php"); 
-            exit();
-        }
-
-        $sql = "INSERT INTO petrecords (ownername, petname, petType, breed, weight, age, gender, visitdate, time, vaccine, veterinarian, diagnosis, treatment) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
+    // Handle form submission
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $stmt = $conn->prepare("
+            INSERT INTO petrecords (
+                ownername, petname, pet_type, breed, weight, age, gender,
+                visitdate, checkup_time, vaccine, veterinarian, diagnosis, treatment
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        
         if ($stmt) {
-            $stmt->bind_param("ssssiisssssss", $ownername, $petname, $petType, $breed, $weight, $age, $gender, $visitdate, $time, $vaccine, $veterinarian, $diagnosis, $treatment);
-
-            if ($stmt->execute()) {
-                $_SESSION['success_message'] = "Record added successfully!";
-            } else {
-                $_SESSION['error_message'] = "Error adding record: " . $stmt->error;
-            }
+            $stmt->bind_param(
+                "ssssdisssssss",
+                $_POST['ownerName'],
+                $_POST['petName'],
+                $_POST['petType'],
+                $_POST['breed'],
+                $_POST['weight'],
+                $_POST['age'],
+                $_POST['gender'],
+                $_POST['checkupDate'],
+                $_POST['time'],
+                $_POST['vaccine'],
+                $_POST['veterinarian'],
+                $_POST['diagnosis'],
+                $_POST['treatment']
+            );
+            
+            $stmt->execute();
             $stmt->close();
+            
+            header("Location: dashboard.php?success=1");
+            exit();
         } else {
-            $_SESSION['error_message'] = "Error preparing SQL statement: " . $conn->error;
+            echo "Error preparing statement: " . $conn->error;
         }
-
-        header("Location: dashboard.php");
-        exit();
     }
-} catch (Exception $e) {
-    error_log("Error: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
-    $_SESSION['error_message'] = "Error: " . $e->getMessage();
-    header("Location: dashboard.php");
-    exit();
-}
 
-// Display messages directly instead of using $messageHtml
-if (isset($_SESSION['success_message'])) {
-    echo "<div class='message success'>{$_SESSION['success_message']}</div>";
-    unset($_SESSION['success_message']);
+    // Add success message display
+$success_message = '';
+if (isset($_GET['success']) && $_GET['success'] == 1) {
+    $success_message = '<div class="message success">Record added successfully!</div>';
 }
-
-if (isset($_SESSION['error_message'])) {
-    echo "<div class='message error'>{$_SESSION['error_message']}</div>";
-    unset($_SESSION['error_message']);
-}
-
-try {
-    // Fetch all records
-    $records = [];
-    $stmt = $conn->prepare("SELECT * FROM petrecords");
-    if ($stmt) {
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $records = $result->fetch_all(MYSQLI_ASSOC);
-        $stmt->close();
-    }
 
     // Fetch recent appointments
     $recentAppointments = [];
@@ -125,7 +97,8 @@ try {
             $stmt->close();
         }
     } else {
-        $searchResults = $records; // Use all records if no search term
+        $result = $conn->query("SELECT * FROM petrecords ORDER BY visitdate DESC");
+        $searchResults = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
     }
 
     // User management data
@@ -150,9 +123,9 @@ try {
             $stmt->close();
         }
     }
+
 } catch (Exception $e) {
-    error_log("Error: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
-    $_SESSION['error_message'] = "Error: " . $e->getMessage();
+    echo "Error: " . $e->getMessage();
 }
 
 $conn->close();
@@ -1294,6 +1267,7 @@ th {
 
             <!-- Medical Records Section -->
             <div id="medicalRecords" class="content-section" style="display:none;">
+            <?php echo $success_message; ?>
                 <div class="medical-search">
                     <div class="search-container">
                         <i class='bx bx-search'></i>
@@ -1404,6 +1378,7 @@ th {
                     </div>
                 </div>
                 <h1>User Management</h1>
+                <button class="add-record" onclick="window.location.href='add_user.php'">Add User</button>
                 <table>
                     <thead>
                         <tr>
@@ -1563,6 +1538,7 @@ th {
             });
         }
 
+        //medical records
         function updateBreeds() {
             const petType = document.getElementById("petType").value;
             const breedSelect = document.getElementById("breed");
@@ -1597,27 +1573,28 @@ th {
 
         function handleMedicalForm() {
             document.getElementById('medicalForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                try {
-                    const formData = new FormData(e.target);
-                    const response = await fetch('dashboard.php', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    if (!response.ok) throw new Error('Form submission failed');
-                    closePopup();
-                    const medicalResponse = await fetch('dashboard.php');
-                    const html = await medicalResponse.text();
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(html, 'text/html');
-                    document.getElementById('medical-list').innerHTML = 
-                        doc.getElementById('medical-list').innerHTML;
-                } catch (error) {
-                    console.error('Error submitting form:', error);
-                    alert('Error saving medical record');
-                }
+        e.preventDefault();
+        try {
+            const formData = new FormData(e.target);
+            const response = await fetch('dashboard.php', {
+                method: 'POST',
+                body: formData
             });
+            if (!response.ok) throw new Error('Form submission failed');
+            e.target.reset(); // Clear the form
+            closePopup();
+            const medicalResponse = await fetch('dashboard.php');
+            const html = await medicalResponse.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            document.getElementById('medical-list').innerHTML = 
+                doc.getElementById('medical-list').innerHTML;
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('Error saving medical record');
         }
+    });
+}
 
         function searchMedicals() {
             const searchTerm = document.getElementById('search-medical').value.toLowerCase();

@@ -27,18 +27,22 @@ INSERT INTO `admin`(`id`, `username`, `password`, `email`, `created_at`, `role`,
 <!-- Create a database -->
 <!-- Petrecords -->
 CREATE TABLE `petrecords` (
-  `id` int(11) NOT NULL,
-  `ownername` varchar(255) NOT NULL,
-  `petname` varchar(255) NOT NULL,
-  `breed` varchar(255) NOT NULL,
-  `weight` decimal(55,0) NOT NULL,
-  `age` int(255) NOT NULL,
-  `gender` varchar(255) NOT NULL,
-  `diagnosis` varchar(255) NOT NULL,
-  `treatment` varchar(255) NOT NULL,
-  `visitdate` date NOT NULL
+  `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `ownername` VARCHAR(255) NOT NULL,
+  `petname` VARCHAR(255) NOT NULL,
+  `pet_type` VARCHAR(50) NOT NULL,
+  `breed` VARCHAR(255) NOT NULL,
+  `weight` DECIMAL(5,2) NOT NULL,
+  `age` INT NOT NULL,
+  `gender` ENUM('Male', 'Female') NOT NULL,
+  `visitdate` DATE NOT NULL,
+  `checkup_time` TIME NOT NULL,
+  `vaccine` VARCHAR(255),
+  `veterinarian` VARCHAR(255),
+  `diagnosis` VARCHAR(255) NOT NULL,
+  `treatment` VARCHAR(255) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 
 <!--add data-->
 ALTER TABLE `petrecords`
