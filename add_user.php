@@ -1,36 +1,55 @@
 <?php
 require_once 'db_connection.php'; 
+if (!$conn) {
+    die("Database connection failed!");
+}
 session_start();
 
 // Process form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $role = $_POST['role'];
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hash the password
-    
-    // Check if passwords match
-    if ($_POST['password'] === $_POST['confirm-password']) {
-        // Prepare and bind
-        $stmt = $conn->prepare("INSERT INTO admin (role, username, email, password) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $role, $username, $email, $password);
-        
-        // Execute the statement
-        if ($stmt->execute()) {
-            $success_message = "New user added successfully!";
-        } else {
-            $error_message = "Error: " . $stmt->error;
-        }
-        
-        $stmt->close();
-    } else {
+    $role = trim($_POST['role']);
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm-password'];
+
+    // Input validation
+    if (empty($username) || empty($email) || empty($password)) {
+        $error_message = "All fields are required!";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error_message = "Invalid email format!";
+    } elseif (strlen($password) < 8) {
+        $error_message = "Password must be at least 8 characters!";
+    } elseif ($password !== $confirm_password) {
         $error_message = "Passwords do not match!";
+    } else {
+        // Check for existing users
+        $check_stmt = $conn->prepare("SELECT id FROM admin WHERE username = ? OR email = ?");
+        $check_stmt->bind_param("ss", $username, $email);
+        $check_stmt->execute();
+        $check_stmt->store_result();
+
+        if ($check_stmt->num_rows > 0) {
+            $error_message = "Username or email already exists!";
+        } else {
+            // Hash password and insert new user
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("INSERT INTO admin (role, username, email, password) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param("ssss", $role, $username, $email, $hashed_password);
+
+            if ($stmt->execute()) {
+                $success_message = "New user added successfully!";
+            } else {
+                $error_message = "Error: " . $stmt->error;
+            }
+            $stmt->close();
+        }
+        $check_stmt->close();
     }
 }
 
 $conn->close();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -189,9 +208,6 @@ $conn->close();
         }
         ?>
 
-
-
-
         <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
             <div class="form-group">
                 <select name="role" id="role">
@@ -225,8 +241,7 @@ $conn->close();
         </form>
     </div>
 
-    <script>
-        // JavaScript to toggle password visibility
+    <script>    
         document.querySelectorAll('.toggle-password').forEach(item => {
             item.addEventListener('click', function () {
                 const input = this.previousElementSibling;

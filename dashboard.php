@@ -1498,6 +1498,7 @@ th {
             }
         }
 
+        //apponitments
         function handleBulkActions() {
             const selectAll = document.getElementById('select-all');
             const confirmAll = document.getElementById('confirm-all');
