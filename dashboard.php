@@ -1219,6 +1219,7 @@ th {
 
             <!-- Appointments Section -->
             <div id="appointments" class="content-section" style="display:none;">
+            <h1>Appointments</h1>
                 <div class="appointment-search">
                     <div class="search-container">
                         <i class='bx bx-search'></i>
@@ -1267,6 +1268,7 @@ th {
 
             <!-- Medical Records Section -->
             <div id="medicalRecords" class="content-section" style="display:none;">
+            <h1>Client Records</h1>
             <?php echo $success_message; ?>
                 <div class="medical-search">
                     <div class="search-container">
@@ -1274,7 +1276,6 @@ th {
                         <input type="text" id="search-medical" placeholder="Search records..." onkeyup="searchMedicals()">
                     </div>
                 </div>
-                <h1>Client Records</h1>
                 <button class="add-record" onclick="openPopup('add')">Add Medical Record</button>
                 
                 <!-- Popup Form -->
@@ -1371,13 +1372,13 @@ th {
 
             <!-- User Management Section -->
             <div id="userManagement" class="content-section" style="display:none;">
+            <h1>User Management</h1>
                 <div class="management-search">
                     <div class="search-container">
                         <i class='bx bx-search'></i>
                         <input type="text" id="search-management" placeholder="Search users..." onkeyup="searchUsers()">
                     </div>
                 </div>
-                <h1>User Management</h1>
                 <button class="add-record" onclick="window.location.href='add_user.php'">Add User</button>
                 <table>
                     <thead>
